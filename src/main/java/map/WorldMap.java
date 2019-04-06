@@ -1,12 +1,12 @@
 package map;
 
-import java.awt.*;
+public class WorldMap<T> {
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+    WorldMapLayout layout;
 
-public abstract class WorldMap<T> {
-    protected TerrainMap<T> terrain;
+    public WorldMap(WorldMapLayout layout) {
+        this.layout = layout;
+    }
 
     enum Control {
         UP,
@@ -16,27 +16,9 @@ public abstract class WorldMap<T> {
         SKIP,
     }
 
-    @NotNull
-    public Point getDimensions() {
-        return terrain.getDimensions();
-    }
+//
+//    public abstract void step(@NotNull Control action);
+//
+//    public abstract void moveGameObjcetToPosition(@NotNull Point position, @NotNull GameObject<T> gameObject);
 
-    @NotNull
-    public T displayCell(@NotNull Point position) {
-        GameObject<T> object = getGameObject(position);
-        if (object == null) {
-            return terrain.displayCell(position);
-        } else {
-            return object.display();
-        }
-    }
-
-    public abstract boolean isPassable(@NotNull Point position);
-
-    public abstract void step(@NotNull Control action);
-
-    @Nullable
-    public abstract GameObject<T> getGameObject(@NotNull Point position);
-
-    public abstract void moveGameObjcetToPosition(@NotNull Point position, @NotNull GameObject<T> gameObject);
 }

@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
-public interface TerrainMap<T> {
+public interface TerrainMap {
     enum TerrainCellType {
         WALL,
         VOID,
@@ -18,9 +18,6 @@ public interface TerrainMap<T> {
 
     @NotNull
     Point getExitPoint();
-
-    @NotNull
-    T displayCell(Point position);
 
     @NotNull
     TerrainCellType getCellType(Point position);

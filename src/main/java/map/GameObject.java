@@ -2,17 +2,12 @@ package map;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
-
 public abstract class GameObject<T> implements Drawable<T> {
-    private Point position;
+    private Cell<T> cell;
 
-    @NotNull
-    Point getPosition() {
-        return position;
-    }
-
-    void moveToPosition(@NotNull Point position) {
-        this.position = position;
+    public void moveToCell(@NotNull Cell<T> cell) {
+        this.cell.clearGameObject();
+        cell.setGameObjectToCell(this);
+        this.cell = cell;
     }
 }

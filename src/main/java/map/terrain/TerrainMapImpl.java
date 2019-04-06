@@ -1,9 +1,8 @@
-package map;
+package map.terrain;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 public class TerrainMapImpl implements TerrainMap {
     private TerrainCellType [][] terrain;
@@ -37,6 +36,6 @@ public class TerrainMapImpl implements TerrainMap {
 
     @Override
     public @NotNull TerrainCellType getCellType(Point position) {
-        return terrain[position.x][position.y];
+        return terrain[position.y][position.x];
     }
 }

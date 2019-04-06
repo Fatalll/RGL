@@ -1,5 +1,10 @@
 package map;
 
+import game_objects.Player;
+import map.terrain.Cell;
+import map.terrain.Floor;
+import map.terrain.TerrainMap;
+import map.terrain.Wall;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -8,19 +13,21 @@ public class WorldMapLayout {
     private Cell<Character>[][] world;
     private Point dimensions;
 
-    public WorldMapLayout(@NotNull TerrainMap terrain) {
+    public WorldMapLayout(@NotNull TerrainMap terrain, Player player) {
         dimensions = terrain.getDimensions();
 
-        int width = dimensions.x;
-        int height = dimensions.y;
+        int width = dimensions.y;
+        int height = dimensions.x;
         world = new Cell[width][height];
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 Point point = new Point(i, j);
-                world[i][j] = terrain.getCellType(point) == TerrainMap.TerrainCellType.WALL ? new Wall(point) : new Floor(point);
+                world[j][i] = terrain.getCellType(point) == TerrainMap.TerrainCellType.WALL ? new Wall(point) : new Floor(point);
             }
         }
+
+        player.moveToCell(world[terrain.getEnterPoint().x][terrain.getEnterPoint().y]);
     }
 
     @NotNull
@@ -34,6 +41,15 @@ public class WorldMapLayout {
     }
 
     public boolean isPassable(@NotNull Point position) {
-        return world[position.x][position.y].canSetGameObject();
+        if (position.x >= dimensions.x || position.x < 0 || position.y < 0 || position.y >= dimensions.y) {
+            return false;
+        }
+
+        return world[position.y][position.x].canSetGameObject();
+    }
+
+    @NotNull
+    public Cell<Character> getCell(@NotNull Point position) {
+        return world[position.y][position.x];
     }
 }

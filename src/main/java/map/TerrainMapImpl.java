@@ -3,10 +3,12 @@ package map;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class TerrainMapImpl implements TerrainMap {
-    private TerrainCellType [][] terrain;
+    public TerrainCellType [][] terrain;
     private Point enterPoint;
     private Point exitPoint;
     private int height;
@@ -18,6 +20,11 @@ public class TerrainMapImpl implements TerrainMap {
         this.exitPoint = exitPoint;
         this.height = height;
         this.width = width;
+    }
+
+    public TerrainMapImpl(String fileName) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(fileName));
+        deserialize(reader);
     }
 
     @Override
@@ -37,6 +44,43 @@ public class TerrainMapImpl implements TerrainMap {
 
     @Override
     public @NotNull TerrainCellType getCellType(Point position) {
-        return terrain[position.x][position.y];
+        return terrain[position.y][position.x];
+    }
+
+    public void deserialize(BufferedReader in) throws IOException {
+        String w = in.readLine();
+        String h = in.readLine();
+
+        width = Integer.parseInt(w);
+        height = Integer.parseInt(h);
+        terrain = new TerrainCellType[height][width];
+
+        for (int i = 0; i < height; i++) {
+            String line = in.readLine();
+            if (line.length() != width) {
+                throw new IOException("Corrupted data");
+            }
+            for (int j = 0; j < width; j++) {
+                char cellType = line.charAt(j);
+                switch (cellType) {
+                    case '0':
+                        terrain[i][j] = TerrainCellType.VOID;
+                        break;
+                    case '1':
+                        terrain[i][j] = TerrainCellType.WALL;
+                        break;
+                    case 's':
+                        enterPoint = new Point(j, i);
+                        terrain[i][j] = TerrainCellType.VOID;
+                        break;
+                    case 'e':
+                        exitPoint = new Point(j, i);
+                        terrain[i][j] = TerrainCellType.VOID;
+                        break;
+                    default:
+                        throw new IOException("Corrupted data");
+                }
+            }
+        }
     }
 }

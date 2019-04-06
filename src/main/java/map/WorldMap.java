@@ -1,24 +1,34 @@
 package map;
 
+import game_objects.Player;
+import org.jetbrains.annotations.NotNull;
+import utils.PlayerControl;
+
+import java.awt.*;
+
 public class WorldMap<T> {
 
     WorldMapLayout layout;
+    Player player;
 
-    public WorldMap(WorldMapLayout layout) {
+    public WorldMap(@NotNull WorldMapLayout layout, @NotNull Player player) {
+        this.layout = layout;
+        this.player = player;
+    }
+
+    @NotNull
+    public WorldMapLayout getMapLayout() {
+        return layout;
+    }
+
+    public void changeMapLayout(@NotNull WorldMapLayout layout) {
         this.layout = layout;
     }
 
-    enum Control {
-        UP,
-        DOWN,
-        LEFT,
-        RIGHT,
-        SKIP,
+    public void step(@NotNull PlayerControl.Control action) {
+        Point newPosition = PlayerControl.calculateNextPosition(player.getPosition(), action);
+        if (layout.isPassable(newPosition)) {
+            player.moveToCell(layout.getCell(newPosition));
+        }
     }
-
-//
-//    public abstract void step(@NotNull Control action);
-//
-//    public abstract void moveGameObjcetToPosition(@NotNull Point position, @NotNull GameObject<T> gameObject);
-
 }

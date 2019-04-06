@@ -1,4 +1,4 @@
-package map;
+package map.terrain;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -6,6 +6,7 @@ import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+
 
 public class TerrainMapImpl implements TerrainMap {
     public TerrainCellType [][] terrain;

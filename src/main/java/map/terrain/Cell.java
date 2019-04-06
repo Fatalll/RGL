@@ -1,5 +1,7 @@
-package map;
+package map.terrain;
 
+import game_objects.Drawable;
+import game_objects.GameObject;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -15,9 +17,9 @@ public abstract class Cell<T> implements Drawable<T> {
         return position;
     }
 
-    abstract boolean canSetGameObject();
+    public abstract boolean canSetGameObject();
 
-    abstract void setGameObjectToCell(@NotNull GameObject<T> gameObject);
+    public abstract void setGameObjectToCell(@NotNull GameObject<T> gameObject);
 
-    abstract void clearGameObject();
+    public abstract void clearGameObject();
 }

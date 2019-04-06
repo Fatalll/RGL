@@ -1,4 +1,4 @@
-package map;
+package map.terrain;
 
 import org.jetbrains.annotations.NotNull;
 

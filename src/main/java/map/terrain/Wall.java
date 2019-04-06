@@ -1,5 +1,6 @@
-package map;
+package map.terrain;
 
+import game_objects.GameObject;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;

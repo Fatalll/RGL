@@ -1,5 +1,6 @@
-package map;
+package map.terrain;
 
+import game_objects.GameObject;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -23,7 +24,7 @@ public class Floor extends Cell<Character> {
 
     @Override
     public void setGameObjectToCell(@NotNull GameObject<Character> gameObject) {
-        if (this.gameObject != null) {
+        if (this.gameObject == null) {
             this.gameObject = gameObject;
         } else {
             throw new IllegalStateException();

@@ -12,7 +12,7 @@ import static map.terrain.TerrainMap.TerrainCellType.VOID;
 import static map.terrain.TerrainMap.TerrainCellType.WALL;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         TerrainMap.TerrainCellType[][] map = {
                 {WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL},
@@ -27,13 +27,14 @@ public class Main {
                 {WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL}
         };
 
-        TerrainMap terrain = new TerrainMapImpl(map, new Point(5, 0), new Point(5, 9), 10, 10);
+        //TerrainMap terrain = new TerrainMapImpl(map, new Point(5, 0), new Point(5, 9), 10, 10);
+        TerrainMap terrain = new TerrainMapImpl(map.getClass().getClassLoader().getResource("test.map").getPath());
+
 
         Player player = new Player();
 
         WorldMapLayout layout = new WorldMapLayout(terrain, player);
         WorldMap world = new WorldMap(layout, player);
-
 
         try {
             while (true) {
@@ -45,6 +46,7 @@ public class Main {
                     System.out.println();
                 }
 
+                System.out.println("Please, enter a command sequence:");
                 char c = (char) System.in.read();
                 System.in.skip(1);
 
@@ -59,6 +61,7 @@ public class Main {
                 } else {
                     world.step(PlayerControl.Control.SKIP);
                 }
+
             }
 
         } catch (IOException e) {

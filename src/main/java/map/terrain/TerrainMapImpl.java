@@ -71,11 +71,11 @@ public class TerrainMapImpl implements TerrainMap {
                         terrain[i][j] = TerrainCellType.WALL;
                         break;
                     case 's':
-                        enterPoint = new Point(j, i);
+                        enterPoint = new Point(i, j);
                         terrain[i][j] = TerrainCellType.VOID;
                         break;
                     case 'e':
-                        exitPoint = new Point(j, i);
+                        exitPoint = new Point(i, j);
                         terrain[i][j] = TerrainCellType.VOID;
                         break;
                     default:

@@ -5,8 +5,6 @@ import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
-
-import com.googlecode.lanterna.terminal.swing.TerminalEmulatorAutoCloseTrigger;
 import game_objects.Player;
 import map.WorldMap;
 import map.WorldMapLayout;
@@ -14,7 +12,7 @@ import map.terrain.TerrainMap;
 import map.terrain.TerrainMapImpl;
 import utils.PlayerControl;
 
-import java.awt.Point;
+import java.awt.*;
 import java.io.IOException;
 
 import static map.terrain.TerrainMap.TerrainCellType.VOID;
@@ -42,7 +40,7 @@ class MainLoop {
 
 	MainLoop() {
     	try {
-            terrain = new TerrainMapImpl(map.getClass().getClassLoader().getResource("test.map").getPath());
+            terrain = new TerrainMapImpl("/test.map");
     	} catch (Exception e) {
         	e.printStackTrace();
     	}

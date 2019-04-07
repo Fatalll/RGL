@@ -6,6 +6,6 @@ public class Player extends GameObject<Character> {
     @NotNull
     @Override
     public Character display() {
-        return '$';
+        return '@';
     }
 }

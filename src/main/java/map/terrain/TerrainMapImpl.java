@@ -4,8 +4,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 
 public class TerrainMapImpl implements TerrainMap {
@@ -24,7 +24,7 @@ public class TerrainMapImpl implements TerrainMap {
     }
 
     public TerrainMapImpl(String fileName) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(fileName));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(TerrainMap.class.getResourceAsStream(fileName)));
         deserialize(reader);
     }
 

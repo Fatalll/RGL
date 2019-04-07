@@ -28,7 +28,7 @@ public class Main {
         };
 
         //TerrainMap terrain = new TerrainMapImpl(map, new Point(5, 0), new Point(5, 9), 10, 10);
-        TerrainMap terrain = new TerrainMapImpl(map.getClass().getClassLoader().getResource("test.map").getPath());
+        TerrainMap terrain = new TerrainMapImpl("/test.map");
 
 
         Player player = new Player();

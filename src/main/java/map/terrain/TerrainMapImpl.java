@@ -9,13 +9,13 @@ import java.io.InputStreamReader;
 
 
 public class TerrainMapImpl implements TerrainMap {
-    public TerrainCellType [][] terrain;
+    public TerrainCellType[][] terrain;
     private Point enterPoint;
     private Point exitPoint;
     private int height;
     private int width;
 
-    public TerrainMapImpl(TerrainCellType [][] terrain, Point enterPoint, Point exitPoint, int width, int height) {
+    public TerrainMapImpl(TerrainCellType[][] terrain, Point enterPoint, Point exitPoint, int width, int height) {
         this.terrain = terrain;
         this.enterPoint = enterPoint;
         this.exitPoint = exitPoint;
@@ -75,7 +75,7 @@ public class TerrainMapImpl implements TerrainMap {
                         terrain[i][j] = TerrainCellType.VOID;
                         break;
                     case 'e':
-                        exitPoint = new Point(i, j);
+                        exitPoint = new Point(j, i);
                         terrain[i][j] = TerrainCellType.VOID;
                         break;
                     default:

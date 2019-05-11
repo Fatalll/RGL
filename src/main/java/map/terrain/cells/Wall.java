@@ -1,4 +1,4 @@
-package map.terrain;
+package map.terrain.cells;
 
 import game_objects.GameObject;
 import org.jetbrains.annotations.NotNull;
@@ -8,6 +8,11 @@ import java.awt.*;
 public class Wall extends Cell<Character> {
     public Wall(Point position) {
         super(position);
+    }
+
+    @Override
+    public GameObject<Character> getGameObject() {
+        return null;
     }
 
     @Override

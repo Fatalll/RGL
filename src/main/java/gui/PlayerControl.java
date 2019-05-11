@@ -1,4 +1,4 @@
-package utils;
+package gui;
 
 import java.awt.*;
 
@@ -14,6 +14,7 @@ public class PlayerControl {
             case RIGHT:
                 return new Point(position.x + 1, position.y);
             case SKIP:
+            case EXIT:
                 return position;
         }
 
@@ -26,5 +27,6 @@ public class PlayerControl {
         LEFT,
         RIGHT,
         SKIP,
+        EXIT,
     }
 }

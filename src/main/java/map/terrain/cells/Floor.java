@@ -1,4 +1,4 @@
-package map.terrain;
+package map.terrain.cells;
 
 import game_objects.GameObject;
 import org.jetbrains.annotations.NotNull;
@@ -10,6 +10,11 @@ public class Floor extends Cell<Character> {
 
     public Floor(Point position) {
         super(position);
+    }
+
+    @Override
+    public GameObject<Character> getGameObject() {
+        return gameObject;
     }
 
     @Override

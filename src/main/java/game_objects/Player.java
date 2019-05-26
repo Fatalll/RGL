@@ -6,12 +6,10 @@ import javafx.util.Pair;
 import logic.GameContext;
 import map.WorldMap;
 import org.jetbrains.annotations.NotNull;
+import util.Property;
 
-import java.awt.*;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Random;
+import java.awt.Point;
+import java.util.*;
 
 public class Player extends Dummy implements GUI.ActionListener {
     protected int exp = 0;
@@ -21,13 +19,13 @@ public class Player extends Dummy implements GUI.ActionListener {
     public Player(@NotNull GameContext context, int lvl, Runnable onDeath) {
         super(context, lvl);
         this.onDeath = onDeath;
-        health = 100000;
+        health = 100;
     }
 
     @NotNull
     @Override
-    public Character display() {
-        return '@';
+    public GameObjectType display() {
+        return GameObjectType.PLAYER;
     }
 
     @Override
@@ -46,7 +44,7 @@ public class Player extends Dummy implements GUI.ActionListener {
     }
 
     private void lvlUpIfCan() {
-        if (Math.pow(2, lvl) < exp) {
+        if (nextLevelExp() < exp) {
             lvl += 1;
 
             Random random = new Random();
@@ -54,7 +52,7 @@ public class Player extends Dummy implements GUI.ActionListener {
             armor += random.nextInt(5);
             attack += random.nextInt(5);
 
-            System.out.println("Lvl UP!");
+            context.updateGameStatus("Level UP!");
         }
     }
 
@@ -101,5 +99,19 @@ public class Player extends Dummy implements GUI.ActionListener {
 
     public int[][] getPlayerMap() {
         return playerMap;
+    }
+
+    private double nextLevelExp() {
+       return Math.pow(2, lvl);
+    }
+
+    @Override
+    public List<Property> getStatus() {
+        List<Property> p = super.getStatus();
+        ArrayList<Property> p2 = new ArrayList<>(p);
+        p2.add(() -> "Level: " + lvl);
+        //p2.add(() -> "Exp: " + exp);
+        //p2.add(() -> "Until next level: " + (int)(nextLevelExp() - exp));
+        return p2;
     }
 }

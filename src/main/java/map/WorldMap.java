@@ -1,5 +1,6 @@
 package map;
 
+import game_objects.GameObjectType;
 import game_objects.Player;
 import game_objects.mobs.AggressiveMob;
 import game_objects.mobs.CowardMob;
@@ -65,7 +66,7 @@ public class WorldMap {
     }
 
     @NotNull
-    public Character cellDisplay(int x, int y) {
+    public GameObjectType cellDisplay(int x, int y) {
         return layout.cellDisplay(x, y);
     }
 
@@ -78,7 +79,7 @@ public class WorldMap {
     }
 
     @NotNull
-    public Cell<Character> getCell(@NotNull Point position) {
+    public Cell<GameObjectType> getCell(@NotNull Point position) {
         return layout.getCell(position);
     }
 }

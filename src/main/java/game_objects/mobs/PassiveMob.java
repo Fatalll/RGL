@@ -1,5 +1,6 @@
 package game_objects.mobs;
 
+import game_objects.GameObjectType;
 import logic.GameContext;
 import logic.behavior.PassiveBehaviorStrategy;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +13,7 @@ public class PassiveMob extends Hostile {
 
     @NotNull
     @Override
-    public Character display() {
-        return 'P';
+    public GameObjectType display() {
+        return GameObjectType.HOSTILE_PASS;
     }
 }

@@ -1,5 +1,6 @@
 package game_objects;
 
+import game_objects.items.Item;
 import gui.GUI;
 import gui.PlayerControl;
 import javafx.util.Pair;
@@ -16,10 +17,23 @@ public class Player extends Dummy implements GUI.ActionListener {
     private Runnable onDeath;
     private int playerMap[][];
 
+    private List<Item> inventory = new ArrayList<>();
+    private final int maxInventorySize = 5;
+
     public Player(@NotNull GameContext context, int lvl, Runnable onDeath) {
         super(context, lvl);
         this.onDeath = onDeath;
-        health = 100;
+        stats.replace(StatType.HEALTH, new CharacterStat(100));
+    }
+
+    // TODO: cache
+    @Override
+    public Stat getStat(StatType type) {
+       int stat = super.getStat(type).get();
+       for (Item item : inventory) {
+          stat += item.getDiff(type);
+       }
+       return new CharacterStat(stat);
     }
 
     @NotNull
@@ -29,32 +43,54 @@ public class Player extends Dummy implements GUI.ActionListener {
     }
 
     @Override
+    public void nextMove(@NotNull Point position) {
+        if (context.getWorld().isPickable(position) && inventory.size() < maxInventorySize) {
+           pickItem(position);
+        } else {
+           super.nextMove(position);
+        }
+    }
+
+    @Override
+    public List<Property> getStatus() {
+        List<Property> p = super.getStatus();
+        ArrayList<Property> p2 = new ArrayList<>(p);
+        p2.add(() -> "Level: " + lvl);
+        return p2;
+    }
+
+    @Override
     public void onAction(PlayerControl.@NotNull Control action) {
         calculatePlayerMap();
 
         attended = false;
         Point position = PlayerControl.calculateNextPosition(getPosition(), action);
-        moveOrAttack(position);
+        //moveOrAttack(position);
+        nextMove(position);
 
-        if (health <= 0) {
+        if (stats.get(StatType.HEALTH).get() <= 0) {
             onDeath.run();
         }
 
         lvlUpIfCan();
     }
 
-    private void lvlUpIfCan() {
-        if (nextLevelExp() < exp) {
-            lvl += 1;
-
-            Random random = new Random();
-            health += 10 + random.nextInt(5);
-            armor += random.nextInt(5);
-            attack += random.nextInt(5);
-
-            context.updateGameStatus("Level UP!");
-        }
+    public void pickItem(@NotNull Point position) {
+        Item item = (Item) context.getWorld().getCell(position).getGameObject();
+        context.getWorld().getCell(position).clearGameObject();
+        inventory.add(item);
+        context.updateGameStatus("Pick up an item!");
     }
+
+    public void dropItem(int n) {
+        if (n > inventory.size() || inventory.isEmpty()) {
+            context.updateGameStatus("Nothing to drop!");
+            return;
+        }
+        inventory.remove(n);
+        context.updateGameStatus("Drop the item!");
+    }
+
 
     public void calculatePlayerMap() {
         WorldMap map = context.getWorld();
@@ -101,17 +137,30 @@ public class Player extends Dummy implements GUI.ActionListener {
         return playerMap;
     }
 
+    public List<Item> getInventory() {
+        return inventory;
+    }
+
+
     private double nextLevelExp() {
        return Math.pow(2, lvl);
     }
 
-    @Override
-    public List<Property> getStatus() {
-        List<Property> p = super.getStatus();
-        ArrayList<Property> p2 = new ArrayList<>(p);
-        p2.add(() -> "Level: " + lvl);
-        //p2.add(() -> "Exp: " + exp);
-        //p2.add(() -> "Until next level: " + (int)(nextLevelExp() - exp));
-        return p2;
+    private void lvlUpIfCan() {
+        if (nextLevelExp() < exp) {
+            lvl += 1;
+
+            Stat health = stats.get(StatType.HEALTH);
+            Stat armor = stats.get(StatType.ARMOR);
+            Stat attack = stats.get(StatType.ATTACK);
+
+            Random random = new Random();
+            health.set(health.get() + 10 + random.nextInt(lvl * 2));
+            armor.set(armor.get() + random.nextInt(lvl * 2));
+            attack.set(attack.get() + random.nextInt(lvl * 2));
+
+            context.updateGameStatus("Level UP!");
+        }
     }
+
 }

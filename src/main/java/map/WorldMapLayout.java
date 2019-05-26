@@ -1,7 +1,9 @@
 package map;
 
+import game_objects.GameObject;
 import game_objects.GameObjectType;
 import game_objects.Player;
+import game_objects.items.Item;
 import logic.GameContext;
 import map.terrain.TerrainMap;
 import map.terrain.cells.Cell;
@@ -71,6 +73,11 @@ public class WorldMapLayout {
         }
 
         return world[y][x].canSetGameObject();
+    }
+
+    public boolean isPickable(@NotNull Point position) {
+       Cell<?> obj = getCell(position);
+       return obj.getGameObject() instanceof Item;
     }
 
     @NotNull

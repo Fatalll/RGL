@@ -27,6 +27,11 @@ public class GameLoop {
        context.setGui(gui);
        gui.addActionListener(context.getPlayer());
        gui.addActionListener(action -> exit = action == PlayerControl.Control.EXIT);
+       gui.addActionListener(action -> {
+           if (action == PlayerControl.Control.DROP) {
+               context.getPlayer().dropItem(0);
+           }
+       });
     }
 
     public void run() throws IOException {

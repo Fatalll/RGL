@@ -1,6 +1,7 @@
 package game_objects.mobs;
 
 import game_objects.Dummy;
+import game_objects.StatType;
 import logic.GameContext;
 import logic.GameLoop;
 import logic.behavior.BehaviorStrategy;
@@ -23,11 +24,11 @@ public abstract class Hostile extends Dummy implements GameLoop.IterationListene
 
     @Override
     public void iterate(@NotNull GameContext context) {
-        if (health <= 0) {
+        if (stats.get(StatType.HEALTH).get() <= 0) {
             context.removeIterationListener(this);
         } else {
             attended = false;
-            moveOrAttack(strategy.step(context, getPosition(), radius));
+            nextMove(strategy.step(context, getPosition(), radius));
         }
     }
 }

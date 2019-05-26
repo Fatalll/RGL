@@ -9,5 +9,7 @@ public enum GameObjectType {
     FLOOR1,
     FLOOR2,
     FLOOR3,
-    EXIT
+    EXIT,
+    RINGITEM,
+    HOODITEM
 }

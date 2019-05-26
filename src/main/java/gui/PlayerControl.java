@@ -13,6 +13,7 @@ public class PlayerControl {
                 return new Point(position.x - 1, position.y);
             case RIGHT:
                 return new Point(position.x + 1, position.y);
+            case DROP:
             case SKIP:
             case EXIT:
                 return position;
@@ -28,5 +29,6 @@ public class PlayerControl {
         RIGHT,
         SKIP,
         EXIT,
+        DROP,
     }
 }

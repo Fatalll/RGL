@@ -5,10 +5,10 @@ import logic.GameContext;
 import org.jetbrains.annotations.NotNull;
 import util.Property;
 
-import java.awt.Point;
+import java.awt.*;
 import java.util.Arrays;
-import java.util.Random;
 import java.util.List;
+import java.util.Random;
 
 public abstract class Dummy extends GameObject<GameObjectType> {
 
@@ -68,6 +68,10 @@ public abstract class Dummy extends GameObject<GameObjectType> {
 
     public int getLvl() {
         return lvl;
+    }
+
+    public int getHealth() {
+        return health;
     }
 
     public List<Property> getStatus() {

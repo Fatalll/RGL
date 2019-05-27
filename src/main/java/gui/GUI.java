@@ -20,6 +20,8 @@ public abstract class GUI {
 
     public abstract void reload();
 
+    public abstract void close() throws IOException;
+
     protected void onPlayerAction(@NotNull PlayerControl.Control action) {
         for (ActionListener listener : listenersToRemove) {
             listeners.remove(listener);

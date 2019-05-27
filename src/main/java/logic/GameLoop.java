@@ -22,11 +22,13 @@ public class GameLoop {
     public GameLoop(String mapPath) throws IOException {
        this.mapPath = mapPath;
 
-       context = new GameContext(new TerrainMapImpl(mapPath), listeners, this::death);
+        context = new GameContext(new TerrainMapImpl(mapPath), listeners);
        gui = new ConsoleGUI(context);
        context.setGui(gui);
        gui.addActionListener(context.getPlayer());
-       gui.addActionListener(action -> exit = action == PlayerControl.Control.EXIT);
+        gui.addActionListener(action -> {
+            if (!exit) exit = action == PlayerControl.Control.EXIT;
+        });
     }
 
     public void run() throws IOException {
@@ -47,8 +49,14 @@ public class GameLoop {
                     context.getWorld().loadMap(new WorldMapLayout(new TerrainMapImpl(mapPath), context));
                     context.updateGameStatus("New region!");
                 }
+
+                if (context.getPlayer().getHealth() <= 0) {
+                    death();
+                }
             }
         }
+
+        gui.close();
     }
 
     public void death() {

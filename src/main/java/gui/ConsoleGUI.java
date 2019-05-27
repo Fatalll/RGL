@@ -9,11 +9,10 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import game_objects.GameObjectType;
 import logic.GameContext;
-import logic.GameStatus;
 import org.jetbrains.annotations.NotNull;
 import util.Property;
 
-import java.awt.Point;
+import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -66,6 +65,11 @@ public class ConsoleGUI extends GUI {
     @Override
     public void reload() {
         dimesions = context.getWorld().getDimensions();
+    }
+
+    @Override
+    public void close() throws IOException {
+        terminal.close();
     }
 
     private void updateStatus() {

@@ -8,17 +8,17 @@ import map.WorldMap;
 import org.jetbrains.annotations.NotNull;
 import util.Property;
 
-import java.awt.Point;
+import java.awt.*;
+import java.util.List;
+import java.util.Queue;
 import java.util.*;
 
 public class Player extends Dummy implements GUI.ActionListener {
     protected int exp = 0;
-    private Runnable onDeath;
     private int playerMap[][];
 
-    public Player(@NotNull GameContext context, int lvl, Runnable onDeath) {
+    public Player(@NotNull GameContext context, int lvl) {
         super(context, lvl);
-        this.onDeath = onDeath;
         health = 100;
     }
 
@@ -35,10 +35,6 @@ public class Player extends Dummy implements GUI.ActionListener {
         attended = false;
         Point position = PlayerControl.calculateNextPosition(getPosition(), action);
         moveOrAttack(position);
-
-        if (health <= 0) {
-            onDeath.run();
-        }
 
         lvlUpIfCan();
     }

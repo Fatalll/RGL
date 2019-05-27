@@ -3,11 +3,14 @@ package game_objects;
 import logic.ConfusionStatus;
 import logic.GameContext;
 import org.jetbrains.annotations.NotNull;
+import util.Property;
 
-import java.awt.*;
+import java.awt.Point;
+import java.util.Arrays;
 import java.util.Random;
+import java.util.List;
 
-public abstract class Dummy extends GameObject<Character> {
+public abstract class Dummy extends GameObject<GameObjectType> {
 
     protected int health;
     protected int armor;
@@ -31,14 +34,13 @@ public abstract class Dummy extends GameObject<Character> {
         if (context.getWorld().isPassable(position)) {
             moveToCell(context.getWorld().getCell(position));
         } else if (!attended) {
-            GameObject<Character> object = context.getWorld().getCell(position).getGameObject();
+            GameObject<?> object = context.getWorld().getCell(position).getGameObject();
 
             if (object instanceof Dummy && object != this) {
                 health -= Math.max(((Dummy) object).attack - armor, 1);
                 ((Dummy) object).health -= Math.max(attack - ((Dummy) object).armor, 1);
 
-                System.out.println("Health: " + health);
-                System.out.println("Mob: " + ((Dummy) object).health);
+                context.updateGameStatus(" Hostile HP " + ((Dummy) object).health);
 
                 if (this instanceof Player) {
                     if (Math.random() < 0.15) {
@@ -67,4 +69,13 @@ public abstract class Dummy extends GameObject<Character> {
     public int getLvl() {
         return lvl;
     }
+
+    public List<Property> getStatus() {
+        return Arrays.asList(
+                () -> "Health: " + health,
+                () -> "Attack: " + attack,
+                () -> "Armor: " + armor
+        );
+    }
 }
+

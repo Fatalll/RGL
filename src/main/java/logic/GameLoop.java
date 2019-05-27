@@ -15,35 +15,37 @@ import java.util.Set;
 public class GameLoop {
     private boolean exit = false;
     private Set<IterationListener> listeners = Collections.newSetFromMap(new IdentityHashMap<>());
+    private String mapPath;
+    private GameContext context;
+    private GUI gui;
 
-    public static void main(String[] args) throws IOException {
-        GameLoop loop = new GameLoop();
+    public GameLoop(String mapPath) throws IOException {
+       this.mapPath = mapPath;
 
-        GameContext context = new GameContext(new TerrainMapImpl("/test.map"), loop.listeners, loop::death);
-        GUI gui = new ConsoleGUI(context);
+       context = new GameContext(new TerrainMapImpl(mapPath), listeners, this::death);
+       gui = new ConsoleGUI(context);
+       context.setGui(gui);
+       gui.addActionListener(context.getPlayer());
+       gui.addActionListener(action -> exit = action == PlayerControl.Control.EXIT);
+    }
 
-        context.setGui(gui);
-
-        gui.addActionListener(context.getPlayer());
-        gui.addActionListener(action -> loop.exit = action == PlayerControl.Control.EXIT);
-
-        while (!loop.exit) {
+    public void run() throws IOException {
+        while (!exit) {
             if (gui.iteration()) {
                 for (IterationListener listener : context.getListenersToRemove()) {
-                    loop.listeners.remove(listener);
+                    listeners.remove(listener);
                 }
 
                 context.getListenersToRemove().clear();
 
-                for (IterationListener listener : loop.listeners) {
+                for (IterationListener listener : listeners) {
                     listener.iterate(context);
                 }
 
                 if (context.getPlayer().getPosition().equals(context.getWorld().getExit())) {
-                    loop.listeners.clear();
-                    // next map
-                    context.getWorld().loadMap(new WorldMapLayout(new TerrainMapImpl("/test.map"), context));
-                    System.out.println("Reload Map!");
+                    listeners.clear();
+                    context.getWorld().loadMap(new WorldMapLayout(new TerrainMapImpl(mapPath), context));
+                    context.updateGameStatus("New region!");
                 }
             }
         }
@@ -51,7 +53,7 @@ public class GameLoop {
 
     public void death() {
         exit = true;
-        System.out.println("You died!");
+        context.updateGameStatus("You died!");
     }
 
     public interface IterationListener {

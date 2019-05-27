@@ -15,14 +15,18 @@ public class GameContext {
     private Player player;
     private WorldMap world;
     private GUI gui;
+    private GameStatus status;
 
     private Set<GameLoop.IterationListener> listeners;
     private List<GameLoop.IterationListener> listenersToRemove = new ArrayList<>();
 
-    public GameContext(@NotNull TerrainMap initialMap, @NotNull Set<GameLoop.IterationListener> listeners, Runnable onDeath) {
+    public GameContext(@NotNull TerrainMap initialMap, @NotNull Set<GameLoop.IterationListener> listeners,
+                       Runnable onDeath) {
         this.listeners = listeners;
+
         player = new Player(this, 1, onDeath);
         world = new WorldMap(new WorldMapLayout(initialMap, this), this);
+        status = new GameStatus();
     }
 
     @NotNull
@@ -55,4 +59,10 @@ public class GameContext {
     public List<GameLoop.IterationListener> getListenersToRemove() {
         return listenersToRemove;
     }
+
+    public GameStatus getGameStatus() {
+        return status;
+    }
+    public void updateGameStatus(String msg) { status.updateStatus(msg); }
+    public void appendGameStatus(String msg) { status.appendStatus(msg); }
 }

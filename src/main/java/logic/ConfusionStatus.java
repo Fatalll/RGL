@@ -19,7 +19,7 @@ public class ConfusionStatus implements GUI.ActionListener {
 
         if (context.getGui().removeActionListener(context.getPlayer())) {
             context.getGui().addActionListener(this);
-            System.out.println("Confusion!");
+            context.updateGameStatus("Hostile casted 'Confusion'!");
         }
     }
 

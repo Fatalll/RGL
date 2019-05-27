@@ -1,5 +1,6 @@
 package map.terrain.cells;
 
+import game_objects.GameObjectType;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -10,8 +11,8 @@ public class Exit extends Floor {
     }
 
     @Override
-    public @NotNull Character display() {
-        Character label = super.display();
-        return label == ' ' ? '$' : label;
+    public @NotNull GameObjectType display() {
+        GameObjectType label = super.display();
+        return GameObjectType.EXIT;
     }
 }

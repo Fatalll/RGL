@@ -1,5 +1,6 @@
 package game_objects.mobs;
 
+import game_objects.GameObjectType;
 import logic.GameContext;
 import logic.behavior.AggressiveBehaviorStrategy;
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +12,7 @@ public class AggressiveMob extends Hostile {
 
     @NotNull
     @Override
-    public Character display() {
-        return 'A';
+    public GameObjectType display() {
+        return GameObjectType.HOSTILE_AGR;
     }
 }

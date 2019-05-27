@@ -7,6 +7,9 @@ application {
     mainClassName = 'logic.GameLoop'
 }
 
+apply plugin: 'application'
+mainClassName = 'Main'
+
 group 'ru.ifmo'
 version '0.0'
 

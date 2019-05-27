@@ -1,5 +1,6 @@
 package map;
 
+import game_objects.GameObjectType;
 import game_objects.Player;
 import logic.GameContext;
 import map.terrain.TerrainMap;
@@ -12,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 
 public class WorldMapLayout {
-    private Cell<Character>[][] world;
+    private Cell<GameObjectType>[][] world;
     private Point dimensions, entry, exit;
     private GameContext context;
 
@@ -51,12 +52,12 @@ public class WorldMapLayout {
     }
 
     @NotNull
-    public Character cellDisplay(@NotNull Point position) {
+    public GameObjectType cellDisplay(@NotNull Point position) {
         return world[position.x][position.y].display();
     }
 
     @NotNull
-    public Character cellDisplay(int x, int y) {
+    public GameObjectType cellDisplay(int x, int y) {
         return world[x][y].display();
     }
 
@@ -73,7 +74,7 @@ public class WorldMapLayout {
     }
 
     @NotNull
-    public Cell<Character> getCell(@NotNull Point position) {
+    public Cell<GameObjectType> getCell(@NotNull Point position) {
         return world[position.y][position.x];
     }
 }

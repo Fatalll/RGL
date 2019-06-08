@@ -15,6 +15,7 @@ import map.WorldMap;
 import map.WorldMapLayout;
 import map.terrain.TerrainMap;
 import map.terrain.cells.Cell;
+import map.terrain.cells.Exit;
 import map.terrain.cells.Floor;
 import map.terrain.cells.Wall;
 import org.jetbrains.annotations.NotNull;
@@ -151,6 +152,7 @@ public class GameContext {
                 wall.getAsSerializableWall().deserializeFromProto(wallCell);
                 world[wall.getPosition().y][wall.getPosition().x] = wall;
             });
+            world[exit.y][exit.x] = new Exit(exit);
             getWorld().getLayout().setWorld(world);
             getWorld().getLayout().setEntry(entry);
             getWorld().getLayout().setExit(exit);

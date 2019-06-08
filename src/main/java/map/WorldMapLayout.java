@@ -94,6 +94,7 @@ public class WorldMapLayout {
 
     public void setWorld(Cell<GameObjectType>[][] world) {
         this.world = world;
+        dimensions = new Point(world[0].length, world.length);
     }
 
     public void setExit(Point exit) {

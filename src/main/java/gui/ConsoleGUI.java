@@ -160,6 +160,10 @@ public class ConsoleGUI extends GUI {
                 onPlayerAction(PlayerControl.Control.RIGHT);
             } else if (c == 'e') {
                 onPlayerAction(PlayerControl.Control.DROP);
+            } else if (c == 'b') {
+                onPlayerAction(PlayerControl.Control.SAVE);
+            } else if (c == 'n') {
+                onPlayerAction(PlayerControl.Control.LOAD);
             } else {
                 onPlayerAction(PlayerControl.Control.SKIP);
             }

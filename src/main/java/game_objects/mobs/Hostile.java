@@ -6,6 +6,8 @@ import logic.GameContext;
 import logic.GameLoop;
 import logic.behavior.BehaviorStrategy;
 import org.jetbrains.annotations.NotNull;
+import protobuf.GameObjectsProto;
+import protobuf.Serializable;
 
 import java.util.Random;
 
@@ -29,6 +31,28 @@ public abstract class Hostile extends Dummy implements GameLoop.IterationListene
         } else {
             attended = false;
             nextMove(strategy.step(context, getPosition(), radius));
+        }
+    }
+
+    public final Serializable<GameObjectsProto.Hostile> getAsSerializableHostile() {
+        return new SerializableHostileImpl();
+    }
+
+    private class SerializableHostileImpl implements Serializable<GameObjectsProto.Hostile> {
+
+        @Override
+        public GameObjectsProto.Hostile serializeToProto() {
+            return GameObjectsProto.Hostile.newBuilder()
+                    .setDummy(getAsSerializableDummy().serializeToProto())
+                    .setRadius(radius)
+                    .setHostileType(display().toString())
+                    .build();
+        }
+
+        @Override
+        public void deserializeFromProto(GameObjectsProto.Hostile object) {
+            getAsSerializableDummy().deserializeFromProto(object.getDummy());
+            radius = object.getRadius();
         }
     }
 }

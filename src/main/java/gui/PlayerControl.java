@@ -13,13 +13,9 @@ public class PlayerControl {
                 return new Point(position.x - 1, position.y);
             case RIGHT:
                 return new Point(position.x + 1, position.y);
-            case DROP:
-            case SKIP:
-            case EXIT:
+            default:
                 return position;
         }
-
-        throw new IllegalArgumentException();
     }
 
     public enum Control {
@@ -30,5 +26,7 @@ public class PlayerControl {
         SKIP,
         EXIT,
         DROP,
+        SAVE,
+        LOAD
     }
 }

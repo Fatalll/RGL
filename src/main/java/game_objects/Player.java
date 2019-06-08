@@ -1,24 +1,30 @@
 package game_objects;
 
+import game_objects.items.HoodItem;
 import game_objects.items.Item;
+import game_objects.items.RingItem;
 import gui.GUI;
 import gui.PlayerControl;
 import javafx.util.Pair;
 import logic.GameContext;
 import map.WorldMap;
 import org.jetbrains.annotations.NotNull;
+import protobuf.GameObjectsProto;
+import protobuf.Serializable;
 import util.Property;
 
-import java.awt.Point;
+import java.awt.*;
+import java.util.List;
+import java.util.Queue;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Player extends Dummy implements GUI.ActionListener {
+    private final int maxInventorySize = 5;
     protected int exp = 0;
     private Runnable onDeath;
     private int playerMap[][];
-
     private List<Item> inventory = new ArrayList<>();
-    private final int maxInventorySize = 5;
 
     public Player(@NotNull GameContext context, int lvl, Runnable onDeath) {
         super(context, lvl);
@@ -29,11 +35,11 @@ public class Player extends Dummy implements GUI.ActionListener {
     // TODO: cache
     @Override
     public Stat getStat(StatType type) {
-       int stat = super.getStat(type).get();
-       for (Item item : inventory) {
-          stat += item.getDiff(type);
-       }
-       return new CharacterStat(stat);
+        int stat = super.getStat(type).get();
+        for (Item item : inventory) {
+            stat += item.getDiff(type);
+        }
+        return new CharacterStat(stat);
     }
 
     @NotNull
@@ -45,9 +51,9 @@ public class Player extends Dummy implements GUI.ActionListener {
     @Override
     public void nextMove(@NotNull Point position) {
         if (context.getWorld().isPickable(position) && inventory.size() < maxInventorySize) {
-           pickItem(position);
+            pickItem(position);
         } else {
-           super.nextMove(position);
+            super.nextMove(position);
         }
     }
 
@@ -143,7 +149,7 @@ public class Player extends Dummy implements GUI.ActionListener {
 
 
     private double nextLevelExp() {
-       return Math.pow(2, lvl);
+        return Math.pow(2, lvl);
     }
 
     private void lvlUpIfCan() {
@@ -163,4 +169,38 @@ public class Player extends Dummy implements GUI.ActionListener {
         }
     }
 
+    final public Serializable<GameObjectsProto.Player> getAsSerializablePlayer() {
+        return new SerializablePlayerImpl();
+    }
+
+    protected class SerializablePlayerImpl implements Serializable<GameObjectsProto.Player> {
+        @Override
+        public GameObjectsProto.Player serializeToProto() {
+            return GameObjectsProto.Player.newBuilder()
+                    .setExp(exp)
+                    .addAllInventory(inventory.stream().map(item -> item.getAsSerializableItem().serializeToProto()).collect(Collectors.toList()))
+                    .setDummy(getAsSerializableDummy().serializeToProto())
+                    .build();
+        }
+
+        @Override
+        public void deserializeFromProto(GameObjectsProto.Player object) {
+            getAsSerializableDummy().deserializeFromProto(object.getDummy());
+            exp = object.getExp();
+            inventory = object.getInventoryList().stream().map(item -> {
+                LinkedHashMap<StatType, Integer> property = item.getStatsList().stream()
+                        .map(statEntry -> new AbstractMap.SimpleEntry<>(StatType.valueOf(statEntry.getStatType()), statEntry.getStatValue()))
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> y, LinkedHashMap::new));
+
+                switch (GameObjectType.valueOf(item.getItemType())) {
+                    case RINGITEM:
+                        return new RingItem(context, item.getName(), property);
+                    case HOODITEM:
+                        return new HoodItem(context, item.getName(), property);
+                    default:
+                        return null;
+                }
+            }).filter(Objects::nonNull).collect(Collectors.toList());
+        }
+    }
 }

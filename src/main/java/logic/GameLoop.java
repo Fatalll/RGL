@@ -6,7 +6,10 @@ import gui.PlayerControl;
 import map.WorldMapLayout;
 import map.terrain.TerrainMapImpl;
 import org.jetbrains.annotations.NotNull;
+import protobuf.GameObjectsProto;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.IdentityHashMap;
@@ -32,6 +35,30 @@ public class GameLoop {
                context.getPlayer().dropItem(0);
            }
        });
+       gui.addActionListener(action -> {
+           if (action == PlayerControl.Control.SAVE) {
+               try {
+                   FileOutputStream output = new FileOutputStream("gamestate");
+                   context.getAsSerializableContext().serializeToProto().writeTo(output);
+                   output.close();
+               } catch (Exception ignored) {
+                   ignored.printStackTrace();
+               }
+
+           }
+       });
+        gui.addActionListener(action -> {
+            if (action == PlayerControl.Control.LOAD) {
+                try {
+                    FileInputStream input = new FileInputStream("gamestate");
+                    context.getAsSerializableContext().deserializeFromProto(GameObjectsProto.GameContext.parseFrom(input));
+                    input.close();
+                } catch (Exception ignored) {
+                    ignored.printStackTrace();
+                }
+
+            }
+        });
     }
 
     public void run() throws IOException {

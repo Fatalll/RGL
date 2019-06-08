@@ -13,6 +13,8 @@ import map.terrain.cells.Wall;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.Arrays;
+import java.util.stream.Stream;
 
 public class WorldMapLayout {
     private Cell<GameObjectType>[][] world;
@@ -83,5 +85,26 @@ public class WorldMapLayout {
     @NotNull
     public Cell<GameObjectType> getCell(@NotNull Point position) {
         return world[position.y][position.x];
+    }
+
+    @NotNull
+    public Stream<Cell<GameObjectType>> getCellStream() {
+        return Arrays.stream(world).flatMap(Arrays::stream);
+    }
+
+    public void setWorld(Cell<GameObjectType>[][] world) {
+        this.world = world;
+    }
+
+    public void setExit(Point exit) {
+        this.exit = exit;
+    }
+
+    public void setEntry(Point entry) {
+        this.entry = entry;
+    }
+
+    public Point getEntry() {
+        return entry;
     }
 }

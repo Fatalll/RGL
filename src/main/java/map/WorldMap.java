@@ -15,7 +15,9 @@ import map.terrain.cells.Cell;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.Arrays;
 import java.util.Random;
+import java.util.stream.Stream;
 
 public class WorldMap {
     private WorldMapLayout layout;
@@ -121,5 +123,14 @@ public class WorldMap {
             Hostile hostile = new PassiveMob(context);
             hostile.moveToCell(getCell(new Point(x, y)));
         }
+    }
+
+    @NotNull
+    public Stream<Cell<GameObjectType>> getCellStream() {
+        return layout.getCellStream();
+    }
+
+    public WorldMapLayout getLayout() {
+        return layout;
     }
 }

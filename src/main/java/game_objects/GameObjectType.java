@@ -1,6 +1,7 @@
 package game_objects;
 
 public enum GameObjectType {
+    NONE,
     PLAYER,
     HOSTILE_COWARD,
     HOSTILE_PASS,

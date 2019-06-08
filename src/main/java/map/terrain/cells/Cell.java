@@ -4,11 +4,13 @@ import game_objects.Drawable;
 import game_objects.GameObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import protobuf.GameObjectsProto;
+import protobuf.Serializable;
 
 import java.awt.*;
 
 public abstract class Cell<T> implements Drawable<T> {
-    private Point position;
+    protected Point position;
 
     public Cell(Point position) {
         this.position = position;

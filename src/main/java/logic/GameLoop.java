@@ -41,6 +41,7 @@ public class GameLoop {
                    FileOutputStream output = new FileOutputStream("gamestate");
                    context.getAsSerializableContext().serializeToProto().writeTo(output);
                    output.close();
+                   context.updateGameStatus("Game saved");
                } catch (Exception ignored) {
                    ignored.printStackTrace();
                }
@@ -53,6 +54,7 @@ public class GameLoop {
                     FileInputStream input = new FileInputStream("gamestate");
                     context.getAsSerializableContext().deserializeFromProto(GameObjectsProto.GameContext.parseFrom(input));
                     input.close();
+                    context.updateGameStatus("Game loaded");
                 } catch (Exception ignored) {
                     ignored.printStackTrace();
                 }

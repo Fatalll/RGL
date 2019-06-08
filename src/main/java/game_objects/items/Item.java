@@ -49,7 +49,9 @@ public abstract class Item extends GameObject<GameObjectType> {
         public GameObjectsProto.Item serializeToProto() {
             return GameObjectsProto.Item.newBuilder()
                     .setName(name)
-                    .setPosition(GameObjectsProto.Position.newBuilder().setX(getPosition().x).setY(getPosition().y).build())
+                    .setPosition(GameObjectsProto.Position.newBuilder()
+                            .setX(cell == null ? 0 : getPosition().x)
+                            .setY(cell == null ? 0 : getPosition().y).build()) // TODO its hack
                     .addAllStats(property.entrySet().stream().map(
                             statTypeStatEntry -> GameObjectsProto.StatEntry.newBuilder()
                                     .setStatType(statTypeStatEntry.getKey().toString())

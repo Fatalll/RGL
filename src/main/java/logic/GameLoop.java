@@ -37,28 +37,23 @@ public class GameLoop {
        });
        gui.addActionListener(action -> {
            if (action == PlayerControl.Control.SAVE) {
-               try {
-                   FileOutputStream output = new FileOutputStream("gamestate");
+               try (FileOutputStream output = new FileOutputStream("gamestate")) {
                    context.getAsSerializableContext().serializeToProto().writeTo(output);
-                   output.close();
                    context.updateGameStatus("Game saved");
-               } catch (Exception ignored) {
-                   ignored.printStackTrace();
+               } catch (Exception e) {
+                   e.printStackTrace();
                }
 
            }
        });
         gui.addActionListener(action -> {
             if (action == PlayerControl.Control.LOAD) {
-                try {
-                    FileInputStream input = new FileInputStream("gamestate");
+                try (FileInputStream input = new FileInputStream("gamestate")) {
                     context.getAsSerializableContext().deserializeFromProto(GameObjectsProto.GameContext.parseFrom(input));
-                    input.close();
                     context.updateGameStatus("Game loaded");
-                } catch (Exception ignored) {
-                    ignored.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-
             }
         });
     }

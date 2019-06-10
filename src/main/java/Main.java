@@ -141,10 +141,9 @@ public class Main {
 	 *   -g      -- generate a random map 10x10.
 	 *
 	 */
-    public static void main(String[] args_) throws IOException {
+    public static void main(String[] args) throws IOException {
         Options options = CMD.getOptions();
 
-        String[] args = {"-g"};
 		CommandLine cmd = null;
 		try {
     		cmd = new DefaultParser().parse(options, args);

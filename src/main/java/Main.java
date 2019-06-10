@@ -19,6 +19,7 @@ import java.io.IOException;
 
 public class Main {
     static class MainLoop {
+        // Magic constants.
 		private final int mapWidth = 10;
 		private final int mapHeight = 10;
 
@@ -34,8 +35,8 @@ public class Main {
             world = new WorldMap(layout, player);
         }
 
-        MainLoop(String name) throws IOException {
-            terrain = new TerrainMapImpl(name, mapWidth, mapHeight);
+        MainLoop(String path) throws IOException {
+            terrain = new TerrainMapImpl(path, mapWidth, mapHeight);
             player = new Player();
             layout = new WorldMapLayout(terrain, player);
             world = new WorldMap(layout, player);
@@ -63,15 +64,16 @@ public class Main {
             int ydelta = 10;
 
             defaultTerminal.setInitialTerminalSize(new TerminalSize(p.x + xborder, p.y + yborder));
-
             defaultTerminal.setTerminalEmulatorTitle("RGL: A New Hope");
+
             Terminal term = defaultTerminal.createTerminal();
+
             term.setCursorVisible(false);
             term.enterPrivateMode();
 
             TextGraphics textGraphics = term.newTextGraphics();
-                textGraphics.setForegroundColor(TextColor.ANSI.RED);
-                textGraphics.setBackgroundColor(TextColor.ANSI.BLACK);
+            textGraphics.setForegroundColor(TextColor.ANSI.RED);
+            textGraphics.setBackgroundColor(TextColor.ANSI.BLACK);
 
             while (true) {
                 term.clearScreen();
@@ -131,9 +133,18 @@ public class Main {
     	}
 	}
 
-    public static void main(String[] args) throws IOException {
+	/*
+	 * Command line options:
+	 *   -f path -- load map from the user file.
+	 *              Map must be 10x10, with borders '#', 's' as the start point,
+	 *              'e' as the end point, and '.' as a floor.
+	 *   -g      -- generate a random map 10x10.
+	 *
+	 */
+    public static void main(String[] args_) throws IOException {
         Options options = CMD.getOptions();
 
+        String[] args = {"-g"};
 		CommandLine cmd = null;
 		try {
     		cmd = new DefaultParser().parse(options, args);

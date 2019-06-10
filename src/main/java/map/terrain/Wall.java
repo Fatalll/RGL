@@ -16,9 +16,7 @@ public class Wall extends Cell<Character> {
     }
 
     @Override
-    public void clearGameObject() {
-
-    }
+    public void clearGameObject() {}
 
     @Override
     public void setGameObjectToCell(@NotNull GameObject<Character> gameObject) {

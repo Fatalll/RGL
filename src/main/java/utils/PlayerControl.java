@@ -25,6 +25,7 @@ public class PlayerControl {
         DOWN,
         LEFT,
         RIGHT,
+        // Other button is pushed.
         SKIP,
     }
 }

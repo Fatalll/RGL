@@ -24,23 +24,33 @@ public class TerrainMapGenerator {
 			}
 		}
 		generateBorders(terrain, dims);
+		terrain[s.y][s.x] = TerrainMap.TerrainCellType.VOID;
+		terrain[e.y][e.x] = TerrainMap.TerrainCellType.VOID;
 		generateWalls(terrain, s, e, dims);
 
 		return terrain;
     }
 
+    /* Generate some random walls on the map, saving connections between all
+     * pairs of two empty cells.
+     */
     private void generateWalls(TerrainMap.TerrainCellType[][] terrain, Point s, Point e, Point dims) {
+    	// List of points that can contain walls.
 		ArrayList<Point> lst = new ArrayList<>();
 		for (int i = 0; i < dims.y; ++i) {
 			for (int j = 0; j < dims.x; ++j) {
+				// Dont' add walls, start point and end point to the list.
 				if (terrain[i][j] == TerrainMap.TerrainCellType.WALL
 				  || (i == s.y && j == s.x) || (i == e.y && j == e.x)) {
     				  continue;
 				}
+
 				lst.add(new Point(j, i));
 			}
 		}
+		// Regulate number of walls.
 		int free = (int)(lst.size() * 0.7);
+
 		while (lst.size() != free) {
 			Point p = lst.remove(rand.nextInt(lst.size() - 1));
 			if (!check_neibs(terrain, p, dims)) {
@@ -82,9 +92,13 @@ public class TerrainMapGenerator {
 				cnt++;
 			}
 		}
+		// A wall can be placed if the cell have more than 3 neighbors.
 		return cnt >= 3;
 	}
 
+	/*
+	 * Check connectivity.
+	 */
     private static boolean[][] bfs(Point start, TerrainMap.TerrainCellType[][] terrain, Point dims) {
 		Queue<Point> q = new ArrayDeque<>();
 		boolean[][] visited = new boolean[terrain.length][terrain[0].length];
@@ -98,7 +112,8 @@ public class TerrainMapGenerator {
         	              , new Point(p.x - 1, p.y)
         	              , new Point(p.x + 1, p.y)};
 			for (Point move : pts) {
-				if (!valid(move, dims) || visited[move.y][move.x] || terrain[move.y][move.x] == TerrainMap.TerrainCellType.WALL) {
+				if (!valid(move, dims) || visited[move.y][move.x]
+						|| terrain[move.y][move.x] == TerrainMap.TerrainCellType.WALL) {
     				continue;
 				}
 				visited[move.y][move.x] = true;
@@ -107,7 +122,6 @@ public class TerrainMapGenerator {
 		}
 		return visited;
     }
-
 
 	private void generateBorders(TerrainMap.TerrainCellType[][] terrain, Point dims) {
 	    generateRooms(terrain, 0, 0, dims.x, dims.y);

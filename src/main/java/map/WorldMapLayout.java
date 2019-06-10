@@ -20,6 +20,7 @@ public class WorldMapLayout {
         int height = dimensions.y;
         world = new Cell[height][width];
 
+        // Construct the world map based on terrain map.
         for (int col = 0; col < width; col++) {
             for (int row = 0; row < height; row++) {
                 Point point = new Point(col, row);
@@ -28,7 +29,7 @@ public class WorldMapLayout {
             }
         }
 
-        System.out.println(terrain.getEnterPoint() + " " + terrain.getExitPoint());
+        // Move player to the start cell.
         player.moveToCell(world[terrain.getEnterPoint().y][terrain.getEnterPoint().x]);
     }
 
@@ -64,6 +65,6 @@ public class WorldMapLayout {
 	}
 
     private boolean isValidPoint(@NotNull Point point) {
-        return point.x < dimensions.x || point.x >= 0 || point.y >= 0 || point.y < dimensions.y;
+        return point.x < dimensions.x && point.x >= 0 && point.y >= 0 && point.y < dimensions.y;
     }
 }

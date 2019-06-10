@@ -16,11 +16,13 @@ public class TerrainMapImpl implements TerrainMap {
     private Point exitPoint;
     private Point dims;
 
-    public TerrainMapImpl(int width, int height) throws IOException {
+    public TerrainMapImpl(int width, int height) {
         this.dims = new Point(width, height);
         Random rand = new Random();
+        // Generate enter and exit points. We want them to be different.
+        // Also we want them not to be on borders.
         do {
-            enterPoint = new Point(rand.nextInt(width - 2 + 1), rand.nextInt(height - 2) + 1);
+            enterPoint = new Point(rand.nextInt(width - 2) + 1, rand.nextInt(height - 2) + 1);
             exitPoint = new Point(rand.nextInt(width - 2) + 1, rand.nextInt(height- 2) + 1);
         } while (enterPoint == exitPoint);
 
@@ -31,7 +33,6 @@ public class TerrainMapImpl implements TerrainMap {
 		FileReader fr = new FileReader(fileName);
         BufferedReader reader = new BufferedReader(fr);
         this.dims = new Point(width, height);
-        Random rand = new Random();
         deserialize(reader);
     }
 
@@ -62,7 +63,11 @@ public class TerrainMapImpl implements TerrainMap {
         return terrain[position.y][position.x];
     }
 
-    public void deserialize(BufferedReader in) throws IOException {
+    /*
+     * Read the map from the given file stream.
+     * Remember the necessary map format.
+     */
+    private void deserialize(BufferedReader in) throws IOException {
         int height = dims.y;
         int width = dims.x;
         terrain = new TerrainCellType[height][width];

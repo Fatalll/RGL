@@ -8,8 +8,8 @@ import java.awt.*;
 
 public class WorldMap<T> {
 
-    WorldMapLayout layout;
-    Player player;
+    private WorldMapLayout layout;
+    private Player player;
 
     public WorldMap(@NotNull WorldMapLayout layout, @NotNull Player player) {
         this.layout = layout;

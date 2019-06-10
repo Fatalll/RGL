@@ -34,6 +34,6 @@ public class Floor extends Cell<Character> {
     @NotNull
     @Override
     public Character display() {
-        return (gameObject == null) ? ' ' : gameObject.display();
+        return (gameObject == null) ? '.' : gameObject.display();
     }
 }

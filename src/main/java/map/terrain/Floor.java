@@ -27,7 +27,7 @@ public class Floor extends Cell<Character> {
         if (this.gameObject == null) {
             this.gameObject = gameObject;
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("The cell already contains an object!");
         }
     }
 

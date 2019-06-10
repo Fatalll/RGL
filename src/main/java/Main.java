@@ -133,7 +133,7 @@ public class Main {
     	}
 	}
 
-	/*
+	/**
 	 * Command line options:
 	 *   -f path -- load map from the user file.
 	 *              Map must be 10x10, with borders '#', 's' as the start point,

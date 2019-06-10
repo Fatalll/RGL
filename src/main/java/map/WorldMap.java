@@ -25,7 +25,9 @@ public class WorldMap<T> {
         this.layout = layout;
     }
 
-    // Change player's position if possible.
+    /**
+     * Change player's position if possible.
+     */
     public void step(@NotNull PlayerControl.Control action) {
         Point newPosition = PlayerControl.calculateNextPosition(player.getPosition(), action);
         if (layout.isPassable(newPosition)) {

@@ -31,7 +31,8 @@ public class TerrainMapGenerator {
 		return terrain;
     }
 
-    /* Generate some random walls on the map, saving connections between all
+    /**
+	 * Generate some random walls on the map, saving connections between all
      * pairs of two empty cells.
      */
     private void generateWalls(TerrainMap.TerrainCellType[][] terrain, Point s, Point e, Point dims) {

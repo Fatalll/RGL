@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 
 public interface TerrainMap {
-    public enum TerrainCellType {
+    enum TerrainCellType {
         WALL,
         VOID,
     }

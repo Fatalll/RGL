@@ -63,7 +63,7 @@ public class TerrainMapImpl implements TerrainMap {
         return terrain[position.y][position.x];
     }
 
-    /*
+    /**
      * Read the map from the given file stream.
      * Remember the necessary map format.
      */

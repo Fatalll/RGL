@@ -19,6 +19,7 @@ public class AggressiveBehaviorStrategy implements BehaviorStrategy {
         List<Point> possibleSteps = BehaviorStrategy.defaultPossibleSteps(position);
         Collections.shuffle(possibleSteps);
 
+        // find nearest to player position around
         for (Point possibleStep : possibleSteps) {
             if (distanceToPlayerMap[possibleStep.x][possibleStep.y] < dist) {
                 dist = distanceToPlayerMap[possibleStep.x][possibleStep.y];

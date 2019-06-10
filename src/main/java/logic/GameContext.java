@@ -15,6 +15,7 @@ public class GameContext {
     private GUI gui;
     private GameStatus status;
 
+    // listeners called on each game tick
     private Set<GameLoop.IterationListener> listeners;
 
     public GameContext(@NotNull TerrainMap initialMap, @NotNull Set<GameLoop.IterationListener> listeners) {

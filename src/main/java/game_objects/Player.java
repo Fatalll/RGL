@@ -19,7 +19,7 @@ public class Player extends Dummy implements GUI.ActionListener {
 
     public Player(@NotNull GameContext context, int lvl) {
         super(context, lvl);
-        health = 10000;
+        health = 100;
     }
 
     @NotNull
@@ -28,9 +28,10 @@ public class Player extends Dummy implements GUI.ActionListener {
         return GameObjectType.PLAYER;
     }
 
+    // reacting on Player pressing keyboard
     @Override
     public void onAction(PlayerControl.@NotNull Control action) {
-        calculatePlayerMap();
+        calculatePlayerDistanceMap(); // update distance map
 
         attended = false;
         Point position = PlayerControl.calculateNextPosition(getPosition(), action);
@@ -52,13 +53,16 @@ public class Player extends Dummy implements GUI.ActionListener {
         }
     }
 
-    public void calculatePlayerMap() {
+    // calculate a map of distances to player in each point which can be reached (simple bfs)
+    public void calculatePlayerDistanceMap() {
         WorldMap map = context.getWorld();
         distanceToPlayerMap = new int[map.getDimensions().x][map.getDimensions().y];
+        // fill all points as unreachable
         for (int[] row : distanceToPlayerMap) {
             Arrays.fill(row, Integer.MAX_VALUE);
         }
 
+        // bfs queue
         Queue<Pair<Point, Integer>> q = new LinkedList<>();
         q.add(new Pair<>(getPosition(), 0));
 
@@ -71,6 +75,7 @@ public class Player extends Dummy implements GUI.ActionListener {
             distanceToPlayerMap[position.x][position.y] = counter;
             counter++;
 
+            // step to each possible direction, increment distance (counter)
             checkPositionAndAddToQueue(position.x + 1, position.y, counter, q);
             checkPositionAndAddToQueue(position.x - 1, position.y, counter, q);
             checkPositionAndAddToQueue(position.x, position.y + 1, counter, q);
@@ -78,6 +83,7 @@ public class Player extends Dummy implements GUI.ActionListener {
         }
     }
 
+    // check if point is passable, not processed yet, and add to queue
     private void checkPositionAndAddToQueue(int x, int y, int counter, Queue<Pair<Point, Integer>> queue) {
         WorldMap map = context.getWorld();
         if (map.isPassable(x, y) && distanceToPlayerMap[x][y] == Integer.MAX_VALUE) {

@@ -17,6 +17,7 @@ public class CowardlyBehaviorStrategy implements BehaviorStrategy {
         List<Point> possibleSteps = BehaviorStrategy.defaultPossibleSteps(position);
         Collections.shuffle(possibleSteps);
 
+        // find farthest position to player around
         for (Point possibleStep : possibleSteps) {
             if (distanceToPlayerMap[possibleStep.x][possibleStep.y] != Integer.MAX_VALUE &&
                     distanceToPlayerMap[possibleStep.x][possibleStep.y] > dist) {
@@ -25,6 +26,7 @@ public class CowardlyBehaviorStrategy implements BehaviorStrategy {
             }
         }
 
+        // check if player in aggro distance
         int minDist = Integer.MAX_VALUE;
         for (Point possibleStep : possibleSteps) {
             if (distanceToPlayerMap[possibleStep.x][possibleStep.y] < minDist) {

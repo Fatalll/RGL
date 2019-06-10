@@ -24,9 +24,10 @@ public class ConfusionPlayer extends Player {
         }
     }
 
+    // decorator pattern for player confusion, override his action
     @Override
     public void onAction(PlayerControl.@NotNull Control action) {
-        if (timeout > 0) {
+        if (timeout > 0) { // if confusion, than change direction
             timeout--;
 
             switch (action) {

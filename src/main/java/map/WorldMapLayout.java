@@ -1,5 +1,6 @@
 package map;
 
+
 import game_objects.GameObjectType;
 import game_objects.Player;
 import logic.GameContext;
@@ -25,6 +26,7 @@ public class WorldMapLayout {
         int height = dimensions.x;
         world = new Cell[width][height];
 
+        // Construct the world map based on terrain map.
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 Point point = new Point(i, j);
@@ -38,7 +40,7 @@ public class WorldMapLayout {
     }
 
     public void initializePlayer(@NotNull Player player) {
-        player.moveToCell(world[entry.x][entry.y]);
+        player.moveToCell(world[entry.y][entry.x]);
     }
 
     @NotNull
@@ -53,6 +55,7 @@ public class WorldMapLayout {
 
     @NotNull
     public GameObjectType cellDisplay(@NotNull Point position) {
+        validatePoint(position);
         return world[position.x][position.y].display();
     }
 
@@ -75,6 +78,21 @@ public class WorldMapLayout {
 
     @NotNull
     public Cell<GameObjectType> getCell(@NotNull Point position) {
+        validatePoint(position);
         return world[position.y][position.x];
+    }
+
+    private void validatePoint(@NotNull Point point) {
+        if (!isValidPoint(point)) {
+            throw new IllegalArgumentException("Wrong new position.");
+        }
+    }
+
+    private boolean isValidPoint(@NotNull Point point) {
+        return isValidPoint(point.x, point.y);
+    }
+
+    private boolean isValidPoint(int x, int y) {
+        return x < dimensions.x && x >= 0 && y >= 0 && y < dimensions.y;
     }
 }

@@ -23,10 +23,11 @@ public abstract class Hostile extends Dummy implements GameLoop.IterationListene
 
     @Override
     public void iterate(@NotNull GameContext context) {
+        // if mob died -> delete it from gameloop
         if (health <= 0) {
             context.removeIterationListener(this);
         } else {
-            attended = false;
+            attended = false; // prevent endless loop of beating each other
             moveOrAttack(strategy.step(context, getPosition(), radius));
         }
     }

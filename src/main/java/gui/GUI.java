@@ -11,6 +11,7 @@ import java.util.Set;
 
 public abstract class GUI {
     protected GameContext context;
+    // listeners for GUI events
     private Set<ActionListener> listeners = Collections.newSetFromMap(new IdentityHashMap<>());
 
     public GUI(@NotNull GameContext context) {

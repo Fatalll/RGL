@@ -5,7 +5,6 @@ import game_objects.GameObjectType;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
-import java.util.Random;
 
 public class Floor extends Cell<GameObjectType> {
     private GameObject<GameObjectType> gameObject;
@@ -35,7 +34,7 @@ public class Floor extends Cell<GameObjectType> {
         if (this.gameObject == null) {
             this.gameObject = gameObject;
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("The cell already contains an object!");
         }
     }
 

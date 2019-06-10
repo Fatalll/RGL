@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public interface BehaviorStrategy {
+    // possible steps for mobs for each strategy
     static List<Point> defaultPossibleSteps(Point position) {
         return Arrays.asList(
                 new Point(position.x + 1, position.y),

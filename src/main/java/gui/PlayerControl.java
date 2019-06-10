@@ -3,6 +3,7 @@ package gui;
 import java.awt.*;
 
 public class PlayerControl {
+    // calculate next position based on player choice
     public static Point calculateNextPosition(Point position, Control action) {
         switch (action) {
             case UP:
@@ -26,6 +27,7 @@ public class PlayerControl {
         DOWN,
         LEFT,
         RIGHT,
+        // Other button is pushed.
         SKIP,
         EXIT,
     }

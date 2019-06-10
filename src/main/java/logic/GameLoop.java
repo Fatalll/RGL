@@ -23,7 +23,8 @@ public class GameLoop {
     public GameLoop(String mapPath) throws IOException {
         this.mapPath = mapPath;
 
-        context = new GameContext(new TerrainMapImpl(mapPath), listeners);
+        context = new GameContext(mapPath == null ? new TerrainMapImpl(100, 29)
+                : new TerrainMapImpl(mapPath, 100, 29), listeners);
         gui = new ConsoleGUI(context);
         context.setGui(gui);
         gui.addActionListener(context.getPlayer());
@@ -39,9 +40,11 @@ public class GameLoop {
                     listener.iterate(context);
                 }
 
+                // if the end of the current map, than load next map
                 if (context.getPlayer().getPosition().equals(context.getWorld().getExit())) {
                     listeners.clear();
-                    context.getWorld().loadMap(new WorldMapLayout(new TerrainMapImpl(mapPath), context));
+                    context.getWorld().loadMap(new WorldMapLayout(mapPath == null ? new TerrainMapImpl(100, 29)
+                            : new TerrainMapImpl(mapPath, 100, 29), context));
                     context.updateGameStatus("New region!");
                 }
 

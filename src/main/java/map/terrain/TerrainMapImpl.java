@@ -1,36 +1,51 @@
 package map.terrain;
 
+import generators.TerrainMapGenerator;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.util.Random;
 
 
 public class TerrainMapImpl implements TerrainMap {
     public TerrainCellType[][] terrain;
     private Point enterPoint;
     private Point exitPoint;
-    private int height;
-    private int width;
+    private Point dims;
+
+    public TerrainMapImpl(int width, int height) {
+        this.dims = new Point(width, height);
+        Random rand = new Random();
+        // Generate enter and exit points. We want them to be different.
+        // Also we want them not to be on borders.
+        do {
+            enterPoint = new Point(rand.nextInt(width - 2) + 1, rand.nextInt(height - 2) + 1);
+            exitPoint = new Point(rand.nextInt(width - 2) + 1, rand.nextInt(height - 2) + 1);
+        } while (enterPoint == exitPoint);
+
+        terrain = new TerrainMapGenerator().generate(new Point(width, height), enterPoint, exitPoint);
+    }
+
+    public TerrainMapImpl(String fileName, int width, int height) throws IOException {
+        FileReader fr = new FileReader(fileName);
+        BufferedReader reader = new BufferedReader(fr);
+        this.dims = new Point(width, height);
+        deserialize(reader);
+    }
 
     public TerrainMapImpl(TerrainCellType[][] terrain, Point enterPoint, Point exitPoint, int width, int height) {
         this.terrain = terrain;
         this.enterPoint = enterPoint;
         this.exitPoint = exitPoint;
-        this.height = height;
-        this.width = width;
-    }
-
-    public TerrainMapImpl(String fileName) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(TerrainMap.class.getResourceAsStream(fileName)));
-        deserialize(reader);
+        this.dims = new Point(width, height);
     }
 
     @Override
     public @NotNull Point getDimensions() {
-        return new Point(width, height);
+        return dims;
     }
 
     @Override
@@ -48,19 +63,27 @@ public class TerrainMapImpl implements TerrainMap {
         return terrain[position.y][position.x];
     }
 
-    public void deserialize(BufferedReader in) throws IOException {
-        String w = in.readLine();
-        String h = in.readLine();
-
-        width = Integer.parseInt(w);
-        height = Integer.parseInt(h);
+    /**
+     * Read the map from the given file stream.
+     * Remember the necessary map format.
+     */
+    private void deserialize(BufferedReader in) throws IOException {
+        int height = dims.y;
+        int width = dims.x;
         terrain = new TerrainCellType[height][width];
 
         for (int i = 0; i < height; i++) {
-            String line = in.readLine();
-            if (line.length() != width) {
-                throw new IOException("Corrupted data");
+            String line = null;
+            try {
+                line = in.readLine();
+            } catch (IOException e) {
+                throw new IOException("Corrupted data. Size must be " + width + "x" + height + ".");
             }
+
+            if (line.length() != width) {
+                throw new IOException("Corrupted data. Size must be " + width + "x" + height + ".");
+            }
+
             for (int j = 0; j < width; j++) {
                 char cellType = line.charAt(j);
                 switch (cellType) {
@@ -79,7 +102,7 @@ public class TerrainMapImpl implements TerrainMap {
                         terrain[i][j] = TerrainCellType.VOID;
                         break;
                     default:
-                        throw new IOException("Corrupted data");
+                        throw new IOException("Corrupted data. Wrong symbol: " + cellType);
                 }
             }
         }

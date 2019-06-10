@@ -136,7 +136,7 @@ public class Main {
 
 		CommandLine cmd = null;
 		try {
-    		cmd = new BasicParser().parse(options, args);
+    		cmd = new DefaultParser().parse(options, args);
 		} catch (ParseException e) {
 			System.err.println("error: unable to parse command line parameters.");
 			CMD.usage(options);
@@ -151,7 +151,7 @@ public class Main {
 				System.err.println("error: " + e.getMessage());
     		}
 		} else if (cmd.hasOption(CMD.pathOption)) {
-            String str = (String)cmd.getOptionObject(CMD.pathOption);
+            String str = (String)cmd.getOptionObject(CMD.pathOption.charAt(0));
     		try {
     			ml = new MainLoop(str);
     		} catch (IOException e) {

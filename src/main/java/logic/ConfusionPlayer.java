@@ -1,6 +1,6 @@
 package logic;
 
-import gui.GUI;
+import game_objects.Player;
 import gui.PlayerControl;
 import org.jetbrains.annotations.NotNull;
 
@@ -8,17 +8,18 @@ import java.util.Random;
 
 import static gui.PlayerControl.Control.*;
 
-public class ConfusionStatus implements GUI.ActionListener {
-    protected GameContext context;
-    private int timeout;
+public class ConfusionPlayer extends Player {
+    private static final float CONFUSION_CHANCE = 0.15f;
     private Random random = new Random();
+    private int timeout = 0;
 
-    public ConfusionStatus(int timeout, @NotNull GameContext context) {
-        this.timeout = timeout;
-        this.context = context;
+    public ConfusionPlayer(@NotNull GameContext context, int lvl) {
+        super(context, lvl);
+    }
 
-        if (context.getGui().removeActionListener(context.getPlayer())) {
-            context.getGui().addActionListener(this);
+    public void confuse(int timeout) {
+        if (Math.random() < CONFUSION_CHANCE) {
+            this.timeout = timeout;
             context.updateGameStatus("Hostile casted 'Confusion'!");
         }
     }
@@ -42,11 +43,8 @@ public class ConfusionStatus implements GUI.ActionListener {
                     action = new PlayerControl.Control[]{UP, DOWN, RIGHT}[random.nextInt(3)];
                     break;
             }
-        } else {
-            context.getGui().removeActionListener(this);
-            context.getGui().addActionListener(context.getPlayer());
         }
 
-        context.getPlayer().onAction(action);
+        super.onAction(action);
     }
 }

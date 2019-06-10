@@ -15,11 +15,11 @@ import java.util.*;
 
 public class Player extends Dummy implements GUI.ActionListener {
     protected int exp = 0;
-    private int playerMap[][];
+    private int distanceToPlayerMap[][];
 
     public Player(@NotNull GameContext context, int lvl) {
         super(context, lvl);
-        health = 100;
+        health = 10000;
     }
 
     @NotNull
@@ -54,8 +54,8 @@ public class Player extends Dummy implements GUI.ActionListener {
 
     public void calculatePlayerMap() {
         WorldMap map = context.getWorld();
-        playerMap = new int[map.getDimensions().x][map.getDimensions().y];
-        for (int[] row : playerMap) {
+        distanceToPlayerMap = new int[map.getDimensions().x][map.getDimensions().y];
+        for (int[] row : distanceToPlayerMap) {
             Arrays.fill(row, Integer.MAX_VALUE);
         }
 
@@ -68,33 +68,26 @@ public class Player extends Dummy implements GUI.ActionListener {
             int counter = it.getValue();
             Point position = it.getKey();
 
-            playerMap[position.x][position.y] = counter;
+            distanceToPlayerMap[position.x][position.y] = counter;
             counter++;
 
-            if (map.isPassable(position.x + 1, position.y) && playerMap[position.x + 1][position.y] == Integer.MAX_VALUE) {
-                playerMap[position.x + 1][position.y] = Integer.MAX_VALUE - 1;
-                q.add(new Pair<>(new Point(position.x + 1, position.y), counter));
-            }
-
-            if (map.isPassable(position.x - 1, position.y) && playerMap[position.x - 1][position.y] == Integer.MAX_VALUE) {
-                playerMap[position.x - 1][position.y] = Integer.MAX_VALUE - 1;
-                q.add(new Pair<>(new Point(position.x - 1, position.y), counter));
-            }
-
-            if (map.isPassable(position.x, position.y + 1) && playerMap[position.x][position.y + 1] == Integer.MAX_VALUE) {
-                playerMap[position.x][position.y + 1] = Integer.MAX_VALUE - 1;
-                q.add(new Pair<>(new Point(position.x, position.y + 1), counter));
-            }
-
-            if (map.isPassable(position.x, position.y - 1) && playerMap[position.x][position.y - 1] == Integer.MAX_VALUE) {
-                playerMap[position.x][position.y - 1] = Integer.MAX_VALUE - 1;
-                q.add(new Pair<>(new Point(position.x, position.y - 1), counter));
-            }
+            checkPositionAndAddToQueue(position.x + 1, position.y, counter, q);
+            checkPositionAndAddToQueue(position.x - 1, position.y, counter, q);
+            checkPositionAndAddToQueue(position.x, position.y + 1, counter, q);
+            checkPositionAndAddToQueue(position.x, position.y - 1, counter, q);
         }
     }
 
-    public int[][] getPlayerMap() {
-        return playerMap;
+    private void checkPositionAndAddToQueue(int x, int y, int counter, Queue<Pair<Point, Integer>> queue) {
+        WorldMap map = context.getWorld();
+        if (map.isPassable(x, y) && distanceToPlayerMap[x][y] == Integer.MAX_VALUE) {
+            distanceToPlayerMap[x][y] = Integer.MAX_VALUE - 1;
+            queue.add(new Pair<>(new Point(x, y), counter));
+        }
+    }
+
+    public int[][] getDistanceToPlayerMap() {
+        return distanceToPlayerMap;
     }
 
     private double nextLevelExp() {
@@ -106,8 +99,6 @@ public class Player extends Dummy implements GUI.ActionListener {
         List<Property> p = super.getStatus();
         ArrayList<Property> p2 = new ArrayList<>(p);
         p2.add(() -> "Level: " + lvl);
-        //p2.add(() -> "Exp: " + exp);
-        //p2.add(() -> "Until next level: " + (int)(nextLevelExp() - exp));
         return p2;
     }
 }

@@ -1,6 +1,6 @@
 package game_objects;
 
-import logic.ConfusionStatus;
+import logic.ConfusionPlayer;
 import logic.GameContext;
 import org.jetbrains.annotations.NotNull;
 import util.Property;
@@ -37,30 +37,31 @@ public abstract class Dummy extends GameObject<GameObjectType> {
             GameObject<?> object = context.getWorld().getCell(position).getGameObject();
 
             if (object instanceof Dummy && object != this) {
-                health -= Math.max(((Dummy) object).attack - armor, 1);
-                ((Dummy) object).health -= Math.max(attack - ((Dummy) object).armor, 1);
+                Dummy dummy = (Dummy) object;
 
-                context.updateGameStatus(" Hostile HP " + ((Dummy) object).health);
+                health -= Math.max(dummy.attack - armor, 1);
+                dummy.health -= Math.max(attack - dummy.armor, 1);
 
-                if (this instanceof Player) {
-                    if (Math.random() < 0.15) {
-                        new ConfusionStatus(5, context);
-                    }
+                context.updateGameStatus(" Hostile HP " + dummy.health);
+
+                // cast confusion
+                if (this instanceof ConfusionPlayer) {
+                    ((ConfusionPlayer) this).confuse(5);
                 }
 
                 if (health <= 0) {
                     cell.clearGameObject();
                 }
 
-                if (((Dummy) object).health <= 0) {
+                if (dummy.health <= 0) {
                     object.cell.clearGameObject();
 
                     if (this instanceof Player) {
-                        ((Player) this).exp += ((Dummy) object).lvl;
+                        ((Player) this).exp += dummy.lvl;
                     }
                 }
 
-                ((Dummy) object).attended = true;
+                dummy.attended = true;
                 attended = true;
             }
         }

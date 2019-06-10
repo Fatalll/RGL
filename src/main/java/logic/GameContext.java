@@ -7,8 +7,6 @@ import map.WorldMapLayout;
 import map.terrain.TerrainMap;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 public class GameContext {
@@ -18,12 +16,11 @@ public class GameContext {
     private GameStatus status;
 
     private Set<GameLoop.IterationListener> listeners;
-    private List<GameLoop.IterationListener> listenersToRemove = new ArrayList<>();
 
     public GameContext(@NotNull TerrainMap initialMap, @NotNull Set<GameLoop.IterationListener> listeners) {
         this.listeners = listeners;
 
-        player = new Player(this, 1);
+        player = new ConfusionPlayer(this, 1);
         world = new WorldMap(new WorldMapLayout(initialMap, this), this);
         status = new GameStatus();
     }
@@ -52,11 +49,7 @@ public class GameContext {
     }
 
     public void removeIterationListener(@NotNull GameLoop.IterationListener listener) {
-        listenersToRemove.add(listener);
-    }
-
-    public List<GameLoop.IterationListener> getListenersToRemove() {
-        return listenersToRemove;
+        listeners.remove(listener);
     }
 
     public GameStatus getGameStatus() {

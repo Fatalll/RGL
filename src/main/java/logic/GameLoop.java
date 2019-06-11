@@ -10,6 +10,8 @@ import util.LoadCommand;
 import util.SaveCommand;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
@@ -68,6 +70,10 @@ public class GameLoop {
     public void death() {
         exit = true;
         context.updateGameStatus("You died!");
+        // Remove save if exist
+        try {
+            Files.deleteIfExists(Paths.get("gamestate"));
+        } catch (IOException ignored) {}
     }
 
     public interface IterationListener {

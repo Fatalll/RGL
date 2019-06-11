@@ -108,47 +108,47 @@ public class GameContext {
                     .map(Floor.class::cast).map(Floor::getGameObject).filter(Hostile.class::isInstance).map(Hostile.class::cast);
 
             return GameObjectsProto.GameContext.newBuilder()
-                    .setWidth(getWorld().getDimensions().x)
-                    .setHeight(getWorld().getDimensions().y)
-                    .setEntry(GameObjectsProto.Position.newBuilder().setX(getWorld().getLayout().getEntry().x).setY(getWorld().getLayout().getEntry().y).build())
-                    .setExit(GameObjectsProto.Position.newBuilder().setX(getWorld().getLayout().getExit().x).setY(getWorld().getLayout().getExit().y).build())
-                    .addAllFloors(floorStream.map(floor -> floor.getAsSerializableFloor().serializeToProto()).collect(Collectors.toList()))
-                    .addAllWalls(wallStream.map(wall -> wall.getAsSerializableWall().serializeToProto()).collect(Collectors.toList()))
-                    .setPlayer(getPlayer().getAsSerializablePlayer().serializeToProto())
+                    .setWidth(getWorld().getDimensions().x) // Save x dimension
+                    .setHeight(getWorld().getDimensions().y) // Save y dimension
+                    .setEntry(GameObjectsProto.Position.newBuilder().setX(getWorld().getLayout().getEntry().x).setY(getWorld().getLayout().getEntry().y).build()) // Save entry point
+                    .setExit(GameObjectsProto.Position.newBuilder().setX(getWorld().getLayout().getExit().x).setY(getWorld().getLayout().getExit().y).build()) // Save exit point
+                    .addAllFloors(floorStream.map(floor -> floor.getAsSerializableFloor().serializeToProto()).collect(Collectors.toList())) // Save all floors
+                    .addAllWalls(wallStream.map(wall -> wall.getAsSerializableWall().serializeToProto()).collect(Collectors.toList())) // Save all walls
+                    .setPlayer(getPlayer().getAsSerializablePlayer().serializeToProto()) // Save player
                     .addAllItems(itemStream
                             .map(item -> item.getAsSerializableItem().serializeToProto())
-                            .collect(Collectors.toList()))
+                            .collect(Collectors.toList())) // Save all items on the map
                     .addAllMobs(hostileStream
-                            .map(mob -> mob.getAsSerializableHostile().serializeToProto())
+                            .map(mob -> mob.getAsSerializableHostile().serializeToProto()) // Save all mobs on the map
                             .collect(Collectors.toList()))
                     .build();
         }
 
         @Override
         public void deserializeFromProto(GameObjectsProto.GameContext object) {
-            listeners.clear();
+            listeners.clear(); // Remove old listeners
 
-            int width = object.getWidth();
-            int height = object.getHeight();
-            Point entry = new Point(object.getEntry().getX(), object.getEntry().getY());
-            Point exit = new Point(object.getExit().getX(), object.getExit().getY());
-            Cell<GameObjectType>[][] world = new Cell[height][width];
+            int width = object.getWidth(); // Restore x dimension
+            int height = object.getHeight(); // Restore y dimension
+            Point entry = new Point(object.getEntry().getX(), object.getEntry().getY()); // Restore entry point
+            Point exit = new Point(object.getExit().getX(), object.getExit().getY()); // Restore exit point
+            Cell<GameObjectType>[][] world = new Cell[height][width]; // Create the new grid
             object.getFloorsList().forEach(floorCell -> {
                 Floor floor = new Floor(null);
                 floor.getAsSerializableFloor().deserializeFromProto(floorCell);
                 world[floor.getPosition().y][floor.getPosition().x] = floor;
-            });
+            }); // Fill the new grid with loaded floors
             object.getWallsList().forEach(wallCell -> {
                 Wall wall = new Wall(null);
                 wall.getAsSerializableWall().deserializeFromProto(wallCell);
                 world[wall.getPosition().y][wall.getPosition().x] = wall;
-            });
-            world[exit.y][exit.x] = new Exit(exit);
+            });// Fill the new grid with loaded walls
+            world[exit.y][exit.x] = new Exit(exit); // Mark exit point on the grid
             getWorld().getLayout().setWorld(world);
             getWorld().getLayout().setEntry(entry);
             getWorld().getLayout().setExit(exit);
 
-            player.getAsSerializablePlayer().deserializeFromProto(object.getPlayer());
+            player.getAsSerializablePlayer().deserializeFromProto(object.getPlayer()); // Load player
             object.getItemsList().forEach(item -> {
                 Item it = null;
                 switch (GameObjectType.valueOf(item.getItemType())) {
@@ -162,7 +162,7 @@ public class GameContext {
                 if (it != null) {
                     it.getAsSerializableItem().deserializeFromProto(item);
                 }
-            });
+            }); // Load items
             object.getMobsList().forEach(hostile -> {
                 Hostile mob = null;
                 switch (GameObjectType.valueOf(hostile.getHostileType())) {
@@ -179,7 +179,7 @@ public class GameContext {
                 if (mob != null) {
                     mob.getAsSerializableHostile().deserializeFromProto(hostile);
                 }
-            });
+            }); // Load mobs
         }
     }
 }

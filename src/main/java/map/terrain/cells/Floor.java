@@ -2,13 +2,11 @@ package map.terrain.cells;
 
 import game_objects.GameObject;
 import game_objects.GameObjectType;
-import game_objects.mobs.CowardMob;
 import org.jetbrains.annotations.NotNull;
 import protobuf.GameObjectsProto;
 import protobuf.Serializable;
 
 import java.awt.*;
-import java.util.Random;
 
 public class Floor extends Cell<GameObjectType> {
     private GameObject<GameObjectType> gameObject;
@@ -38,7 +36,7 @@ public class Floor extends Cell<GameObjectType> {
         if (this.gameObject == null) {
             this.gameObject = gameObject;
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("The cell already contains an object!");
         }
     }
 

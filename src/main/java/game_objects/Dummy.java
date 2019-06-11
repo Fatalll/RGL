@@ -1,6 +1,6 @@
 package game_objects;
 
-import logic.ConfusionStatus;
+import logic.ConfusionPlayer;
 import logic.GameContext;
 import org.jetbrains.annotations.NotNull;
 import protobuf.GameObjectsProto;
@@ -17,7 +17,7 @@ public abstract class Dummy extends GameObject<GameObjectType> {
 
     protected Map<StatType, Stat> stats;
 
-    protected boolean attended; // чтобы не бить дважды
+    protected boolean attended;
 
     protected int lvl;
 
@@ -46,9 +46,11 @@ public abstract class Dummy extends GameObject<GameObjectType> {
 
 
     public void nextMove(@NotNull Point position) {
+        // check if we really can pass to this position
         if (context.getWorld().isPassable(position)) {
             moveToCell(context.getWorld().getCell(position));
         } else if (!attended) {
+            // if we can't pass, probably there is mob, so check it
             attack(position);
         }
     }
@@ -57,24 +59,25 @@ public abstract class Dummy extends GameObject<GameObjectType> {
         GameObject<?> object = context.getWorld().getCell(position).getGameObject();
 
         if (object instanceof Dummy && object != this) {
-            Stat dummy_health = ((Dummy) object).getStat(StatType.HEALTH);
-            int dummy_attack = ((Dummy) object).getStat(StatType.ATTACK).get();
-            int dummy_armor = ((Dummy) object).getStat(StatType.ARMOR).get();
+            Dummy dummy = (Dummy) object;
+
+            Stat dummy_health = dummy.getStat(StatType.HEALTH);
+            int dummy_attack = dummy.getStat(StatType.ATTACK).get();
+            int dummy_armor = dummy.getStat(StatType.ARMOR).get();
 
             Stat health = getStat(StatType.HEALTH);
             int attack = getStat(StatType.ATTACK).get();
             int armor = getStat(StatType.ARMOR).get();
-
-
+            
             health.set(health.get() - calcAttack(dummy_attack, armor));
             dummy_health.set(dummy_health.get() - calcAttack(attack, dummy_armor));
 
-            if (this instanceof Player) {
-                if (Math.random() < 0.15) {
-                    new ConfusionStatus(5, context);
-                }
+            // cast confusion
+            if (this instanceof ConfusionPlayer) {
+                ((ConfusionPlayer) this).confuse(5);
             }
 
+            // if we died, delete self from cell
             if (health.get() <= 0) {
                 context.updateGameStatus("Killed!");
                 cell.clearGameObject();
@@ -82,22 +85,26 @@ public abstract class Dummy extends GameObject<GameObjectType> {
 
             if (dummy_health.get() <= 0) {
                 object.cell.clearGameObject();
-
+                // if current object is Player, than add some exp
                 if (this instanceof Player) {
-                    ((Player) this).exp += ((Dummy) object).lvl;
+                    ((Player) this).exp += dummy.lvl;
                 }
             }
 
-            ((Dummy) object).attended = true;
+            dummy.attended = true;
             attended = true;
 
             stats.replace(StatType.HEALTH, health);
-            ((Dummy) object).stats.replace(StatType.HEALTH, dummy_health);
+            dummy.stats.replace(StatType.HEALTH, dummy_health);
         }
     }
 
     public int getLvl() {
         return lvl;
+    }
+
+    public int getHealth() {
+        return getStat(StatType.HEALTH).get();
     }
 
     public List<Property> getStatus() {

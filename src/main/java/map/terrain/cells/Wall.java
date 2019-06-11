@@ -29,7 +29,6 @@ public class Wall extends Cell<GameObjectType> {
 
     @Override
     public void clearGameObject() {
-
     }
 
     @Override

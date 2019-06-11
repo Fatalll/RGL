@@ -12,7 +12,7 @@ import logic.GameContext;
 import org.jetbrains.annotations.NotNull;
 import util.Property;
 
-import java.awt.Point;
+import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -72,7 +72,9 @@ public class ConsoleGUI extends GUI {
     }
 
     @Override
-    public void kill() throws IOException { terminal.close();}
+    public void close() throws IOException {
+        terminal.close();
+    }
 
     private void updateInventory(int x, int y, int len)  {
         textGraphics.drawRectangle(

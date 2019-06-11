@@ -1,6 +1,5 @@
 package logic;
 
-import game_objects.GameObject;
 import game_objects.GameObjectType;
 import game_objects.Player;
 import game_objects.items.HoodItem;
@@ -23,9 +22,6 @@ import protobuf.GameObjectsProto;
 import protobuf.Serializable;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -36,14 +32,13 @@ public class GameContext {
     private GUI gui;
     private GameStatus status;
 
+    // listeners called on each game tick
     private Set<GameLoop.IterationListener> listeners;
-    private List<GameLoop.IterationListener> listenersToRemove = new ArrayList<>();
 
-    public GameContext(@NotNull TerrainMap initialMap, @NotNull Set<GameLoop.IterationListener> listeners,
-                       Runnable onDeath) {
+    public GameContext(@NotNull TerrainMap initialMap, @NotNull Set<GameLoop.IterationListener> listeners) {
         this.listeners = listeners;
 
-        player = new Player(this, 1, onDeath);
+        player = new ConfusionPlayer(this, 1);
         world = new WorldMap(new WorldMapLayout(initialMap, this), this);
         status = new GameStatus();
     }
@@ -72,12 +67,9 @@ public class GameContext {
     }
 
     public void removeIterationListener(@NotNull GameLoop.IterationListener listener) {
-        listenersToRemove.add(listener);
+        listeners.remove(listener);
     }
 
-    public List<GameLoop.IterationListener> getListenersToRemove() {
-        return listenersToRemove;
-    }
 
     public GameStatus getGameStatus() {
         return status;
@@ -135,7 +127,6 @@ public class GameContext {
         @Override
         public void deserializeFromProto(GameObjectsProto.GameContext object) {
             listeners.clear();
-            listenersToRemove.clear();
 
             int width = object.getWidth();
             int height = object.getHeight();
@@ -162,10 +153,10 @@ public class GameContext {
                 Item it = null;
                 switch (GameObjectType.valueOf(item.getItemType())) {
                     case RINGITEM:
-                        it = new RingItem(GameContext.this, null,null);
+                        it = new RingItem(GameContext.this, null, null);
                         break;
                     case HOODITEM:
-                        it = new HoodItem(GameContext.this, null,null);
+                        it = new HoodItem(GameContext.this, null, null);
                         break;
                 }
                 if (it != null) {

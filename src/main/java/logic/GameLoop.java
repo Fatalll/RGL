@@ -6,10 +6,9 @@ import gui.PlayerControl;
 import map.WorldMapLayout;
 import map.terrain.TerrainMapImpl;
 import org.jetbrains.annotations.NotNull;
-import protobuf.GameObjectsProto;
+import util.LoadCommand;
+import util.SaveCommand;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
@@ -23,43 +22,23 @@ public class GameLoop {
     private GameContext context;
     private GUI gui;
 
-    public GameLoop(String mapPath) throws IOException {
+    public GameLoop(String mapPath, boolean load) throws IOException {
         this.mapPath = mapPath;
 
         context = new GameContext(mapPath == null ? new TerrainMapImpl(100, 29)
                 : new TerrainMapImpl(mapPath, 100, 29), listeners);
-        gui = new ConsoleGUI(context);
+        gui = new ConsoleGUI(context, new SaveCommand(context), () -> exit = true);
         context.setGui(gui);
         gui.addActionListener(context.getPlayer());
-        gui.addActionListener(action -> {
-            if (!exit) exit = action == PlayerControl.Control.EXIT;
-        });
         gui.addActionListener(action -> {
             if (action == PlayerControl.Control.DROP) {
                 context.getPlayer().dropItem(0);
             }
         });
-        gui.addActionListener(action -> {
-            if (action == PlayerControl.Control.SAVE) {
-                try (FileOutputStream output = new FileOutputStream("gamestate")) {
-                    context.getAsSerializableContext().serializeToProto().writeTo(output);
-                    context.updateGameStatus("Game saved");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
 
-            }
-        });
-        gui.addActionListener(action -> {
-            if (action == PlayerControl.Control.LOAD) {
-                try (FileInputStream input = new FileInputStream("gamestate")) {
-                    context.getAsSerializableContext().deserializeFromProto(GameObjectsProto.GameContext.parseFrom(input));
-                    context.updateGameStatus("Game loaded");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        if (load) {
+            new LoadCommand(context).execute();
+        }
     }
 
     public void run() throws IOException {

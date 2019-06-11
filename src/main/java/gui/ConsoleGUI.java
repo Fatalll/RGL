@@ -10,6 +10,7 @@ import game_objects.GameObjectType;
 import game_objects.items.Item;
 import logic.GameContext;
 import org.jetbrains.annotations.NotNull;
+import util.Command;
 import util.Property;
 
 import java.awt.*;
@@ -31,9 +32,12 @@ public class ConsoleGUI extends GUI {
     private Point dimesions;
     private DisplayConfig<TextCharacter> display = ConsoleDisplayConfig.getConfig();
     private String previousKey = "";
+    private Command save, exit;
 
-    public ConsoleGUI(@NotNull GameContext context) throws IOException {
+    public ConsoleGUI(@NotNull GameContext context, @NotNull Command save, @NotNull Command exit) throws IOException {
         super(context);
+        this.save = save;
+        this.exit = exit;
 
         dimesions = context.getWorld().getDimensions();
 
@@ -76,9 +80,9 @@ public class ConsoleGUI extends GUI {
         terminal.close();
     }
 
-    private void updateInventory(int x, int y, int len)  {
+    private void updateInventory(int x, int y, int len) {
         textGraphics.drawRectangle(
-                new TerminalPosition(x,y), new TerminalSize(len,xdelta), '.');
+                new TerminalPosition(x, y), new TerminalSize(len, xdelta), '.');
 
         x += 1;
         for (Item i : context.getPlayer().getInventory()) {
@@ -91,16 +95,16 @@ public class ConsoleGUI extends GUI {
 
     private void updateStatus(int x, int y, int len) {
         textGraphics.drawRectangle(
-                new TerminalPosition(x,y), new TerminalSize(len,xdelta), '.');
+                new TerminalPosition(x, y), new TerminalSize(len, xdelta), '.');
 
         x += 1;
         y += 1;
         textGraphics.setForegroundColor(TextColor.ANSI.RED);
         textGraphics.putString(x, y, "Control: w/a/s/d. Quit: q / <esc>. Drop: e.");
-        textGraphics.putString(x, y + 1, "Save: b. Load: n");
+        textGraphics.putString(x, y + 1, "Save: b");
         updatePlayerStatus(x, y + 2);
         updateGameStatus(x, y + 3);
-        textGraphics.putString(x,y + 4, "Press " + previousKey);
+        textGraphics.putString(x, y + 4, "Press " + previousKey);
     }
 
     private void updateGameStatus(int x, int y) {
@@ -145,14 +149,14 @@ public class ConsoleGUI extends GUI {
             previousKey = "<enter>";
             terminal.exitPrivateMode();
             terminal.close();
-            onPlayerAction(PlayerControl.Control.EXIT);
+            exit.execute();
         } else if (keyType == KeyType.Character) {
             Character c = key.getCharacter();
             previousKey = "<" + c + ">";
             if (c == 'q') {
                 terminal.exitPrivateMode();
                 terminal.close();
-                onPlayerAction(PlayerControl.Control.EXIT);
+                exit.execute();
             } else if (c == 'w') {
                 onPlayerAction(PlayerControl.Control.UP);
             } else if (c == 's') {
@@ -164,10 +168,7 @@ public class ConsoleGUI extends GUI {
             } else if (c == 'e') {
                 onPlayerAction(PlayerControl.Control.DROP);
             } else if (c == 'b') {
-                onPlayerAction(PlayerControl.Control.SAVE);
-                return false;
-            } else if (c == 'n') {
-                onPlayerAction(PlayerControl.Control.LOAD);
+                save.execute();
                 return false;
             } else {
                 onPlayerAction(PlayerControl.Control.SKIP);
@@ -179,21 +180,6 @@ public class ConsoleGUI extends GUI {
     }
 
     static class ConsoleDisplayConfig {
-
-        static class DisplayCharacter {
-            static final Character EXIT = '>';
-            static final Character FLOOR1 = ' ';
-            static final Character FLOOR2 = '.';
-            static final Character FLOOR3 = ',';
-            static final Character WALL = '*';
-            static final Character PLAYER = '@';
-            static final Character HOSTILE_AGR = 'a';
-            static final Character HOSTILE_PASS = 'p';
-            static final Character HOSTILE_COWARD = 'c';
-            static final Character HOODITEM = '^';
-            static final Character RINGITEM = 'o';
-
-        }
 
         static DisplayConfig<TextCharacter> getConfig() {
             DisplayConfig<TextCharacter> display = new DisplayConfig<>();
@@ -220,6 +206,21 @@ public class ConsoleGUI extends GUI {
             display.set(GameObjectType.HOODITEM,
                     new TextCharacter(DisplayCharacter.HOODITEM, TextColor.ANSI.WHITE, backColor, SGR.BOLD, SGR.ITALIC, SGR.BLINK));
             return display;
+        }
+
+        static class DisplayCharacter {
+            static final Character EXIT = '>';
+            static final Character FLOOR1 = ' ';
+            static final Character FLOOR2 = '.';
+            static final Character FLOOR3 = ',';
+            static final Character WALL = '*';
+            static final Character PLAYER = '@';
+            static final Character HOSTILE_AGR = 'a';
+            static final Character HOSTILE_PASS = 'p';
+            static final Character HOSTILE_COWARD = 'c';
+            static final Character HOODITEM = '^';
+            static final Character RINGITEM = 'o';
+
         }
     }
 

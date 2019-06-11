@@ -24,11 +24,7 @@ public class PlayerControl {
         DOWN,
         LEFT,
         RIGHT,
-        // Other button is pushed.
-        SKIP,
-        EXIT,
-        DROP,
-        SAVE,
-        LOAD
+        SKIP, // Other button is pushed.
+        DROP
     }
 }

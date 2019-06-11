@@ -27,15 +27,19 @@ public class Main {
         try {
             GameLoop gameLoop = null;
 
-            if (cmd.hasOption(CMD.generatOption)) {
-                gameLoop = new GameLoop(null);
-            } else if (cmd.hasOption(CMD.pathOption)) {
-                String str = (String) cmd.getOptionObject(CMD.pathOption.charAt(0));
-                gameLoop = new GameLoop(str);
+            if (cmd.hasOption(CMD.loadOption)) {
+                gameLoop = new GameLoop(null, true);
             } else {
-                System.err.println("error: no required options.");
-                CMD.usage(options);
-                return;
+                if (cmd.hasOption(CMD.generatOption)) {
+                    gameLoop = new GameLoop(null, false);
+                } else if (cmd.hasOption(CMD.pathOption)) {
+                    String str = (String) cmd.getOptionObject(CMD.pathOption.charAt(0));
+                    gameLoop = new GameLoop(str, false);
+                } else {
+                    System.err.println("error: no required options.");
+                    CMD.usage(options);
+                    return;
+                }
             }
 
             gameLoop.run();
@@ -47,11 +51,13 @@ public class Main {
     static class CMD {
         final static String pathOption = "f";
         final static String generatOption = "g";
+        final static String loadOption = "l";
 
         static Options getOptions() {
             Options options = new Options();
             options.addOption(pathOption, true, "Path to the user map.");
             options.addOption(generatOption, "Generate a random map.");
+            options.addOption(loadOption, "Load game if present.");
             return options;
         }
 

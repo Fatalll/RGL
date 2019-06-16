@@ -6,6 +6,7 @@ import rgl.logic.GameContext;
 import rgl.map.terrain.TerrainMapImpl;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 
@@ -14,8 +15,12 @@ import static org.junit.Assert.assertNotEquals;
 
 public class BehaviorStrategyTest {
 
-    private GameContext context = new GameContext(new TerrainMapImpl(100, 29),
-            Collections.newSetFromMap(new IdentityHashMap<>()));
+    private GameContext context;
+
+    public BehaviorStrategyTest() throws IOException {
+        context = new GameContext(new TerrainMapImpl(getClass().getResource("/test.map").getPath(), 100, 29),
+                Collections.newSetFromMap(new IdentityHashMap<>()));
+    }
 
     @Test
     public void testAggressiveBehavior() {
@@ -26,11 +31,11 @@ public class BehaviorStrategyTest {
 
         Point position = player.getPosition();
 
-        Point farPosition = new Point(position.x - 5, position.y - 5);
-        assertEquals(strategy.step(context, farPosition, 5), farPosition);
+        Point farPosition = new Point(position.x - 5, position.y);
+        assertEquals(strategy.step(context, farPosition, 3), farPosition);
 
-        Point nearPosition = new Point(position.x + 2, position.y);
-        assertEquals(strategy.step(context, nearPosition, 5), new Point(position.x + 1, position.y));
+        Point nearPosition = new Point(position.x - 2, position.y);
+        assertEquals(strategy.step(context, nearPosition, 5), new Point(position.x - 1, position.y));
     }
 
     @Test
@@ -42,8 +47,8 @@ public class BehaviorStrategyTest {
 
         Point position = player.getPosition();
 
-        Point farPosition = new Point(position.x - 5, position.y - 5);
-        assertEquals(strategy.step(context, farPosition, 5), farPosition);
+        Point farPosition = new Point(position.x - 5, position.y);
+        assertEquals(strategy.step(context, farPosition, 3), farPosition);
 
         Point nearPosition = new Point(position.x + 2, position.y);
         assertNotEquals(strategy.step(context, nearPosition, 5), new Point(position.x + 2, position.y));

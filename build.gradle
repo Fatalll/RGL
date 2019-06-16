@@ -3,19 +3,11 @@ plugins {
     id 'application'
 }
 
-application {
-    mainClassName = 'rgl.logic.GameLoop'
-}
-
 apply plugin: 'application'
-mainClassName = 'Main'
+mainClassName = 'rgl.Main'
 
 group 'ru.ifmo'
 version '0.0'
-
-apply plugin: 'idea'
-apply plugin: 'application'
-mainClassName = 'Main'
 
 sourceCompatibility = 1.8
 

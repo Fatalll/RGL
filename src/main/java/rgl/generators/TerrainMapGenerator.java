@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Queue;
 import java.util.Random;
 
+/**
+ * Class which is responsible for landscape generation.
+ */
 public class TerrainMapGenerator {
     private Random rand;
 
@@ -15,6 +18,9 @@ public class TerrainMapGenerator {
         rand = new Random();
     }
 
+	/**
+	 * @param seed Seed for a generator of random numbers.
+	 */
     public TerrainMapGenerator(long seed) {
         rand = new Random(seed);
     }
@@ -49,7 +55,15 @@ public class TerrainMapGenerator {
         }
         return visited;
     }
-
+	/**
+	 * Generate a random landscape.
+	 *
+	 * Instantiates new terrain object,
+	 * 
+     * @param s Start point.
+     * @param e End point.
+     * @param dims Terrain map dimentions.
+     */
     public TerrainMap.TerrainCellType[][] generate(Point dims, Point s, Point e) {
         TerrainMap.TerrainCellType[][] terrain = new TerrainMap.TerrainCellType[dims.y][dims.x];
         for (int i = 0; i < dims.y; ++i) {

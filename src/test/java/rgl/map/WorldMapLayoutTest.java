@@ -21,8 +21,6 @@ public class WorldMapLayoutTest {
         TerrainMap tm = new TerrainMapImpl(10, 10);
         WorldMapLayout wml = new WorldMapLayout(tm, context);
         assertEquals(wml.getDimensions(), new Point(10, 10));
-        // Player is here.
-        assertFalse(wml.isPassable(tm.getEnterPoint()));
         assertTrue(wml.isPassable(tm.getExitPoint()));
     }
 }

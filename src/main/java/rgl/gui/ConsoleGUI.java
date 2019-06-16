@@ -18,13 +18,20 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of GUI for console interface.
+ */
 public class ConsoleGUI extends GUI {
 
+	// Border margins.
     private static final int xborder = 15;
     private static final int yborder = 15;
     private static final int xdelta = 7;
     private static final int ydelta = 2;
+
+    // Default background color.
     private static final TextColor backColor = TextColor.ANSI.BLACK;
+    // Default foreground color.
     private static final TextColor foreColor = TextColor.ANSI.WHITE;
 
     private GameContext context;
@@ -60,15 +67,19 @@ public class ConsoleGUI extends GUI {
     public boolean iteration() throws IOException {
         terminal.clearScreen();
 
+		// Redraw the status bar.
         updateStatus(ydelta, 0, 50);
+        // Redraw the inventory bar.
         updateInventory(ydelta + 50, 0, 50);
+        // Redraw the map.
         updateMap();
 
 
         terminal.flush();
+        // Reset all possible color changes in the terminal's global state.
+        resetColor();
 
         KeyStroke key = terminal.readInput();
-        resetColor();
         return handleKeyStroke(key);
     }
 
@@ -176,36 +187,45 @@ public class ConsoleGUI extends GUI {
         return false;
     }
 
+	/**
+	 * Exact display configuration for console.
+	 *
+	 * Include displayed characters and them colors.
+	 */
     static class ConsoleDisplayConfig {
+		static DisplayConfig<TextCharacter> config = new DisplayConfig<>();
+
+		static {
+            config.set(GameObjectType.EXIT,
+                    new TextCharacter(DisplayCharacter.EXIT, TextColor.ANSI.YELLOW, backColor));
+            config.set(GameObjectType.FLOOR1,
+                    new TextCharacter(DisplayCharacter.FLOOR1, TextColor.ANSI.WHITE, backColor));
+            config.set(GameObjectType.FLOOR2,
+                    new TextCharacter(DisplayCharacter.FLOOR2, TextColor.ANSI.YELLOW, backColor));
+            config.set(GameObjectType.FLOOR3,
+                    new TextCharacter(DisplayCharacter.FLOOR3, TextColor.ANSI.GREEN, backColor));
+            config.set(GameObjectType.WALL,
+                    new TextCharacter(DisplayCharacter.WALL, TextColor.ANSI.GREEN, backColor, SGR.ITALIC));
+            config.set(GameObjectType.PLAYER,
+                    new TextCharacter(DisplayCharacter.PLAYER, TextColor.ANSI.CYAN, backColor, SGR.BOLD));
+            config.set(GameObjectType.HOSTILE_AGR,
+                    new TextCharacter(DisplayCharacter.HOSTILE_AGR, TextColor.ANSI.RED, backColor, SGR.BOLD, SGR.FRAKTUR));
+            config.set(GameObjectType.HOSTILE_PASS,
+                    new TextCharacter(DisplayCharacter.HOSTILE_PASS, TextColor.ANSI.MAGENTA, backColor, SGR.BOLD, SGR.ITALIC));
+            config.set(GameObjectType.HOSTILE_COWARD,
+                    new TextCharacter(DisplayCharacter.HOSTILE_COWARD, TextColor.ANSI.GREEN, backColor, SGR.BOLD, SGR.ITALIC));
+            config.set(GameObjectType.RINGITEM,
+                    new TextCharacter(DisplayCharacter.RINGITEM, TextColor.ANSI.YELLOW, backColor, SGR.BOLD, SGR.ITALIC, SGR.BLINK));
+            config.set(GameObjectType.HOODITEM,
+                    new TextCharacter(DisplayCharacter.HOODITEM, TextColor.ANSI.WHITE, backColor, SGR.BOLD, SGR.ITALIC, SGR.BLINK));
+		}
 
         static DisplayConfig<TextCharacter> getConfig() {
-            DisplayConfig<TextCharacter> display = new DisplayConfig<>();
-            display.set(GameObjectType.EXIT,
-                    new TextCharacter(DisplayCharacter.EXIT, TextColor.ANSI.YELLOW, backColor));
-            display.set(GameObjectType.FLOOR1,
-                    new TextCharacter(DisplayCharacter.FLOOR1, TextColor.ANSI.WHITE, backColor));
-            display.set(GameObjectType.FLOOR2,
-                    new TextCharacter(DisplayCharacter.FLOOR2, TextColor.ANSI.YELLOW, backColor));
-            display.set(GameObjectType.FLOOR3,
-                    new TextCharacter(DisplayCharacter.FLOOR3, TextColor.ANSI.GREEN, backColor));
-            display.set(GameObjectType.WALL,
-                    new TextCharacter(DisplayCharacter.WALL, TextColor.ANSI.GREEN, backColor, SGR.ITALIC));
-            display.set(GameObjectType.PLAYER,
-                    new TextCharacter(DisplayCharacter.PLAYER, TextColor.ANSI.CYAN, backColor, SGR.BOLD));
-            display.set(GameObjectType.HOSTILE_AGR,
-                    new TextCharacter(DisplayCharacter.HOSTILE_AGR, TextColor.ANSI.RED, backColor, SGR.BOLD, SGR.FRAKTUR));
-            display.set(GameObjectType.HOSTILE_PASS,
-                    new TextCharacter(DisplayCharacter.HOSTILE_PASS, TextColor.ANSI.MAGENTA, backColor, SGR.BOLD, SGR.ITALIC));
-            display.set(GameObjectType.HOSTILE_COWARD,
-                    new TextCharacter(DisplayCharacter.HOSTILE_COWARD, TextColor.ANSI.GREEN, backColor, SGR.BOLD, SGR.ITALIC));
-            display.set(GameObjectType.RINGITEM,
-                    new TextCharacter(DisplayCharacter.RINGITEM, TextColor.ANSI.YELLOW, backColor, SGR.BOLD, SGR.ITALIC, SGR.BLINK));
-            display.set(GameObjectType.HOODITEM,
-                    new TextCharacter(DisplayCharacter.HOODITEM, TextColor.ANSI.WHITE, backColor, SGR.BOLD, SGR.ITALIC, SGR.BLINK));
-            return display;
+            return config;
         }
 
-        static class DisplayCharacter {
+		// List of diplay symbols for object types. 
+        static final class DisplayCharacter {
             static final Character EXIT = '>';
             static final Character FLOOR1 = ' ';
             static final Character FLOOR2 = '.';

@@ -5,22 +5,22 @@ import rgl.generators.ItemGenerator;
 
 public class ItemTest {
 
-    @Test
-    public void showProp() {
-    }
-
+	// Shall not fall.
+	// Better way to test it is to print in into stdio!
     @Test
     public void generatePropreties() {
-        System.out.println(ItemGenerator.generatePropreties(2, -10, 20));
+        ItemGenerator.generatePropreties(2, -10, 20);
     }
 
+	// Shall not fall.
+	// Better way to test it is to print in into stdio!
     @Test
     public void generateNames() {
-        System.out.println(ItemGenerator.generateName("Ring of"));
-        System.out.println(ItemGenerator.generateName("Ring of"));
-        System.out.println(ItemGenerator.generateName("Ring of"));
-        System.out.println(ItemGenerator.generateName("Ring of"));
-        System.out.println(ItemGenerator.generateName("Ring of"));
-        System.out.println(ItemGenerator.generateName("Ring of"));
+        ItemGenerator.generateName("Ring of");
+        ItemGenerator.generateName("Ring of");
+        ItemGenerator.generateName("Ring of");
+        ItemGenerator.generateName("Ring of");
+        ItemGenerator.generateName("Ring of");
+        ItemGenerator.generateName("Ring of");
     }
 }

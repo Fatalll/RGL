@@ -24,15 +24,15 @@ public class WorldMapLayout {
         this.context = context;
         dimensions = terrain.getDimensions();
 
-        int width = dimensions.y;
-        int height = dimensions.x;
-        world = new Cell[width][height];
+        int width = dimensions.x;
+        int height = dimensions.y;
+        world = new Cell[height][width];
 
         // Construct the world rgl.map based on terrain rgl.map.
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                Point point = new Point(i, j);
-                world[j][i] = terrain.getCellType(point) == TerrainMap.TerrainCellType.WALL ? new Wall(point) : new Floor(point);
+                Point point = new Point(j, i);
+                world[i][j] = terrain.getCellType(point) == TerrainMap.TerrainCellType.WALL ? new Wall(point) : new Floor(point);
             }
         }
 
@@ -58,12 +58,12 @@ public class WorldMapLayout {
     @NotNull
     public GameObjectType cellDisplay(@NotNull Point position) {
         validatePoint(position);
-        return world[position.x][position.y].display();
+        return world[position.y][position.x].display();
     }
 
     @NotNull
     public GameObjectType cellDisplay(int x, int y) {
-        return world[x][y].display();
+        return world[y][x].display();
     }
 
     public boolean isPassable(@NotNull Point position) {

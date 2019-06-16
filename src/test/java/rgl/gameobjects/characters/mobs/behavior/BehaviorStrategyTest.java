@@ -27,9 +27,9 @@ public class BehaviorStrategyTest {
         BehaviorStrategy strategy = new AggressiveBehaviorStrategy();
 
         Player player = context.getPlayer();
-        player.calculatePlayerDistanceMap();
-
         Point position = player.getPosition();
+        context.getWorld().getCell(new Point(position.x - 1, position.y)).clearGameObject();
+        player.calculatePlayerDistanceMap();
 
         Point farPosition = new Point(position.x - 5, position.y);
         assertEquals(strategy.step(context, farPosition, 3), farPosition);

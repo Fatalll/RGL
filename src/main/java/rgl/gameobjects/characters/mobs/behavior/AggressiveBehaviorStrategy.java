@@ -24,8 +24,8 @@ public class AggressiveBehaviorStrategy implements BehaviorStrategy {
 
         // find nearest to player position around
         for (Point possibleStep : possibleSteps) {
-            if (distanceToPlayerMap[possibleStep.x][possibleStep.y] < dist) {
-                dist = distanceToPlayerMap[possibleStep.x][possibleStep.y];
+            if (distanceToPlayerMap[possibleStep.y][possibleStep.x] < dist) {
+                dist = distanceToPlayerMap[possibleStep.y][possibleStep.x];
                 nextPosition = possibleStep;
             }
         }

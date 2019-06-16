@@ -131,7 +131,7 @@ public class ConsoleGUI extends GUI {
         textGraphics.setForegroundColor(TextColor.ANSI.GREEN);
         for (int i = 0; i < dimesions.x; i++) {
             for (int j = 0; j < dimesions.y; j++) {
-                GameObjectType type = context.getWorld().cellDisplay(j, i);
+                GameObjectType type = context.getWorld().cellDisplay(i, j);
                 TextCharacter go = display.get(type);
                 textGraphics.setCharacter(i + ydelta, j + xdelta, go);
             }

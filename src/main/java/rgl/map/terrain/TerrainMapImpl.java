@@ -94,7 +94,7 @@ public class TerrainMapImpl implements TerrainMap {
                         terrain[i][j] = TerrainCellType.WALL;
                         break;
                     case 's':
-                        enterPoint = new Point(i, j);
+                        enterPoint = new Point(j, i);
                         terrain[i][j] = TerrainCellType.VOID;
                         break;
                     case 'e':

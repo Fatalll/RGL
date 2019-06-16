@@ -115,7 +115,7 @@ public class Player extends Dummy implements GUI.ActionListener {
      */
     public void calculatePlayerDistanceMap() {
         WorldMap map = getContext().getWorld();
-        distanceToPlayerMap = new int[map.getDimensions().x][map.getDimensions().y];
+        distanceToPlayerMap = new int[map.getDimensions().y][map.getDimensions().x];
         // fill all points as unreachable
         for (int[] row : distanceToPlayerMap) {
             Arrays.fill(row, Integer.MAX_VALUE);
@@ -131,7 +131,6 @@ public class Player extends Dummy implements GUI.ActionListener {
             int counter = it.getValue();
             Point position = it.getKey();
 
-            distanceToPlayerMap[position.x][position.y] = counter;
             counter++;
 
             // step to each possible direction, increment distance (counter)
@@ -144,8 +143,8 @@ public class Player extends Dummy implements GUI.ActionListener {
 
     private void checkPositionAndAddToQueue(int x, int y, int counter, Queue<Pair<Point, Integer>> queue) {
         WorldMap map = getContext().getWorld();
-        if (map.isPassable(x, y) && distanceToPlayerMap[x][y] == Integer.MAX_VALUE) {
-            distanceToPlayerMap[x][y] = Integer.MAX_VALUE - 1;
+        if (map.isPassable(x, y) && distanceToPlayerMap[y][x] == Integer.MAX_VALUE) {
+            distanceToPlayerMap[y][x] = counter;
             queue.add(new Pair<>(new Point(x, y), counter));
         }
     }

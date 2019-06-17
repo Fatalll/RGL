@@ -79,6 +79,7 @@ public class RGLServer {
             } else {
                 loop = new ServerGameLoop();
                 sessions.put(request.getName(), loop);
+                timer.schedule(loop, STEP_DELAY, STEP_INTERVAL);
             }
 
             responseObserver.onNext(EnterServerResponse.newBuilder()
@@ -88,7 +89,6 @@ public class RGLServer {
 
             responseObserver.onCompleted();
 
-            timer.schedule(loop, STEP_DELAY, STEP_INTERVAL);
         }
 
         @Override
@@ -108,10 +108,11 @@ public class RGLServer {
         public StreamObserver<PlayerMove> move(StreamObserver<GameObjectsProto.GameContext> responseObserver) {
             return new StreamObserver<PlayerMove>() {
                 private UUID playerID;
+                private ServerGameLoop loop;
 
                 @Override
                 public void onNext(PlayerMove value) {
-                    ServerGameLoop loop = sessions.get(value.getServer().getName());
+                    loop = sessions.get(value.getServer().getName());
 
                     if (playerID == null) {
                         playerID = UUID.fromString(value.getPlayerId());
@@ -128,12 +129,12 @@ public class RGLServer {
 
                 @Override
                 public void onError(Throwable t) {
-                    // TODO remove player from session
+                    loop.removePlayer(playerID);
                 }
 
                 @Override
                 public void onCompleted() {
-                    // TODO remove player from session
+                    loop.removePlayer(playerID);
                 }
             };
         }
@@ -153,7 +154,13 @@ public class RGLServer {
                 playerActions.forEach((playerID, actionQueue) -> {
                     Player player = context.getPlayers().get(playerID);
                     GUI.ActionListener listener = player.isConfused() ? new Confusion(player) : player;
-                    listener.onAction(PlayerControl.castFromPlayerAction(actionQueue.poll()));
+
+                    PlayerAction action = actionQueue.poll();
+                    if (action == PlayerAction.DROP) {
+                        player.dropItem(0);
+                    } else {
+                        listener.onAction(PlayerControl.castFromPlayerAction(action));
+                    }
                 });
 
                 for (GameLoop.IterationListener listener : new HashSet<>(listeners)) {
@@ -167,7 +174,6 @@ public class RGLServer {
                     context.getPlayers().values().forEach(player -> context.getWorld().initializePlayerRandomly(player));
                     context.updateGameStatus("New region!");
                 }
-
 
                 context.getPlayers().entrySet().stream().filter(entry -> entry.getValue().getHealth() <= 0)
                         .forEach(entry -> {
@@ -202,6 +208,12 @@ public class RGLServer {
 
             public void addResponseObserver(UUID uuid, StreamObserver<GameObjectsProto.GameContext> responseObserver) {
                 observers.put(uuid, responseObserver);
+            }
+
+            public void removePlayer(UUID playerID) {
+                context.getPlayers().remove(playerID);
+                playerActions.remove(playerID);
+                observers.remove(playerID).onCompleted();
             }
         }
 

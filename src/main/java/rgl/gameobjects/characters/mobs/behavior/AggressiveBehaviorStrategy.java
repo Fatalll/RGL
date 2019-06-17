@@ -14,7 +14,7 @@ public class AggressiveBehaviorStrategy implements BehaviorStrategy {
 
     @Override
     public @NotNull Point step(@NotNull GameContext context, @NotNull Point position, int aggro) {
-        int[][] distanceToPlayerMap = context.getPlayer().getDistanceToPlayerMap();
+        int[][] distanceToPlayerMap = context.getDistanceMap();
 
         int dist = Integer.MAX_VALUE;
         Point nextPosition = position;

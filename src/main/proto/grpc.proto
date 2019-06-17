@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+import "gameobjects.proto";
+
+option java_multiple_files = true;
+option java_package = "rgl.proto";
+option java_outer_classname = "NetworkRGLProto";
+
+package proto;
+
+service NetworkRGL {
+
+    rpc GetServerList (Empty) returns (ServerList) {
+    }
+
+    rpc CreateServer (Server) returns (EnterServerResponse) {
+    }
+
+    rpc EnterServer (Server) returns (EnterServerResponse) {
+    }
+
+    rpc Move (stream PlayerMove) returns (stream GameContext) {
+    }
+
+}
+
+message Empty {
+}
+
+message Server {
+    string name = 1;
+}
+
+message ServerList {
+    repeated Server servers = 1;
+}
+
+message EnterServerResponse {
+    string player_id = 1;
+    GameContext context = 2;
+}
+
+enum PlayerAction {
+    UP = 0;
+    DOWN = 1;
+    LEFT = 2;
+    RIGHT = 3;
+    SKIP = 4;
+    DROP = 5;
+}
+
+message PlayerMove {
+    Server server = 1;
+    string player_id = 2;
+    PlayerAction action = 3;
+}

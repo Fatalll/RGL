@@ -2,9 +2,9 @@ package rgl.gameobjects.items;
 
 import rgl.gameobjects.GameObject;
 import rgl.gameobjects.GameObjectType;
-import rgl.gameobjects.GameObjectsProto;
 import rgl.gameobjects.characters.stats.StatType;
 import rgl.logic.GameContext;
+import rgl.proto.GameObjectsProto;
 import rgl.util.Serializable;
 
 import java.awt.*;

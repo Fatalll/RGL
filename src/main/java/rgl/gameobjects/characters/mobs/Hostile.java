@@ -1,12 +1,12 @@
 package rgl.gameobjects.characters.mobs;
 
 import org.jetbrains.annotations.NotNull;
-import rgl.gameobjects.GameObjectsProto;
 import rgl.gameobjects.characters.Dummy;
 import rgl.gameobjects.characters.mobs.behavior.BehaviorStrategy;
 import rgl.gameobjects.characters.stats.StatType;
 import rgl.logic.GameContext;
 import rgl.logic.GameLoop;
+import rgl.proto.GameObjectsProto;
 import rgl.util.Serializable;
 
 import java.util.Random;

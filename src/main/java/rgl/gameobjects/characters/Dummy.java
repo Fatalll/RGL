@@ -3,14 +3,12 @@ package rgl.gameobjects.characters;
 import org.jetbrains.annotations.NotNull;
 import rgl.gameobjects.GameObject;
 import rgl.gameobjects.GameObjectType;
-import rgl.gameobjects.GameObjectsProto;
-import rgl.gameobjects.characters.player.Confusion;
 import rgl.gameobjects.characters.player.Player;
 import rgl.gameobjects.characters.stats.CharacterStat;
 import rgl.gameobjects.characters.stats.Stat;
 import rgl.gameobjects.characters.stats.StatType;
-import rgl.gui.GUI;
 import rgl.logic.GameContext;
+import rgl.proto.GameObjectsProto;
 import rgl.util.Property;
 import rgl.util.Serializable;
 
@@ -113,12 +111,8 @@ public abstract class Dummy extends GameObject<GameObjectType> {
             // cast confusion
             if (this instanceof Player) {
                 if (Math.random() < CONFUSION_CHANCE) {
-                    GUI gui = getContext().getGui();
-                    // if confusion not already present
-                    if (gui.removeActionListener((Player) this)) {
-                        gui.addActionListener(new Confusion((Player) this, getContext().getGui(), 5));
-                        getContext().updateGameStatus("Hostile casted 'Confusion'!");
-                    }
+                    ((Player) this).confuse(5);
+                    getContext().updateGameStatus("Hostile casted 'Confusion'!");
                 }
             }
 

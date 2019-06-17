@@ -3,6 +3,7 @@ package rgl.logic;
 import org.jetbrains.annotations.NotNull;
 import rgl.commands.LoadCommand;
 import rgl.commands.SaveCommand;
+import rgl.gameobjects.characters.player.Player;
 import rgl.gui.ConsoleGUI;
 import rgl.gui.GUI;
 import rgl.gui.PlayerControl;
@@ -12,10 +13,7 @@ import rgl.map.terrain.TerrainMapImpl;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.IdentityHashMap;
-import java.util.Set;
+import java.util.*;
 
 /**
  * game loop
@@ -26,18 +24,20 @@ public class GameLoop {
     private String mapPath;
     private GameContext context;
     private GUI gui;
+    private Player player;
 
     public GameLoop(String mapPath, boolean load) throws IOException {
         this.mapPath = mapPath;
 
         context = new GameContext(mapPath == null ? new TerrainMapImpl(100, 29)
                 : new TerrainMapImpl(mapPath, 100, 29), listeners);
-        gui = new ConsoleGUI(context, new SaveCommand(context), () -> exit = true);
-        context.setGui(gui);
-        gui.addActionListener(context.getPlayer());
+        player = new Player(context, 1);
+        UUID playerID = context.addPlayer(player);
+        gui = new ConsoleGUI(context, playerID, new SaveCommand(context), () -> exit = true);
+        gui.addActionListener(player);
         gui.addActionListener(action -> {
             if (action == PlayerControl.Control.DROP) {
-                context.getPlayer().dropItem(0);
+                player.dropItem(0);
             }
         });
 
@@ -54,14 +54,15 @@ public class GameLoop {
                 }
 
                 // if the end of the current rgl.map, than load next rgl.map
-                if (context.getPlayer().getPosition().equals(context.getWorld().getExit())) {
+                if (player.getPosition().equals(context.getWorld().getExit())) {
                     listeners.clear();
                     context.getWorld().loadMap(new WorldMapLayout(mapPath == null ? new TerrainMapImpl(100, 29)
                             : new TerrainMapImpl(mapPath, 100, 29), context));
+                    context.getWorld().initializePlayer(player);
                     context.updateGameStatus("New region!");
                 }
 
-                if (context.getPlayer().getHealth() <= 0) {
+                if (player.getHealth() <= 0) {
                     death();
                 }
             }

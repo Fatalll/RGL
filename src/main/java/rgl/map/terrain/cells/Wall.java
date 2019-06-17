@@ -3,7 +3,7 @@ package rgl.map.terrain.cells;
 import org.jetbrains.annotations.NotNull;
 import rgl.gameobjects.GameObject;
 import rgl.gameobjects.GameObjectType;
-import rgl.gameobjects.GameObjectsProto;
+import rgl.proto.GameObjectsProto;
 import rgl.util.Serializable;
 
 import java.awt.*;

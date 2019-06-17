@@ -23,6 +23,14 @@ public abstract class GUI {
      */
     public abstract boolean iteration() throws IOException;
 
+
+    /**
+     * request for redraw a gui
+     *
+     * @throws IOException
+     */
+    public abstract void update() throws IOException;
+
     /**
      * close GUI
      * @throws IOException

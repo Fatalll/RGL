@@ -1,7 +1,9 @@
 syntax = "proto3";
 
-option java_package = "rgl.gameobjects";
+option java_package = "rgl.proto";
 option java_outer_classname = "GameObjectsProto";
+
+package proto;
 
 message Position {
     int32 x = 1;
@@ -26,7 +28,7 @@ message GameContext {
     repeated WallCell walls = 5;
     repeated FloorCell floors = 6;
 
-    Player player = 7;
+    repeated Player player = 7;
     repeated Item items = 8;
     repeated Hostile mobs = 9;
 }
@@ -58,7 +60,8 @@ message Item {
 message Player {
     Dummy dummy = 1;
     int32 exp = 2;
-    repeated Item inventory = 3;
+    string id = 3;
+    repeated Item inventory = 4;
 }
 
 

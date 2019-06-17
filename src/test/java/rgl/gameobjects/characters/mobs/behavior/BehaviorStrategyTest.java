@@ -20,13 +20,16 @@ public class BehaviorStrategyTest {
     public BehaviorStrategyTest() throws IOException {
         context = new GameContext(new TerrainMapImpl(getClass().getResource("/test.map").getPath(), 100, 29),
                 Collections.newSetFromMap(new IdentityHashMap<>()));
+
+        Player player = new Player(context, 1);
+        context.addPlayer(player);
     }
 
     @Test
     public void testAggressiveBehavior() {
         BehaviorStrategy strategy = new AggressiveBehaviorStrategy();
 
-        Player player = context.getPlayer();
+        Player player = context.getPlayers().get(0);
         Point position = player.getPosition();
         context.getWorld().getCell(new Point(position.x - 1, position.y)).clearGameObject();
         player.calculatePlayerDistanceMap();
@@ -42,7 +45,7 @@ public class BehaviorStrategyTest {
     public void testCowardlyBehavior() {
         BehaviorStrategy strategy = new CowardlyBehaviorStrategy();
 
-        Player player = context.getPlayer();
+        Player player = context.getPlayers().get(0);
         player.calculatePlayerDistanceMap();
 
         Point position = player.getPosition();

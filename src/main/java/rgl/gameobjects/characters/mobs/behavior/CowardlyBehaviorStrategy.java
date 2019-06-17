@@ -13,7 +13,7 @@ import java.util.List;
 public class CowardlyBehaviorStrategy implements BehaviorStrategy {
     @Override
     public @NotNull Point step(@NotNull GameContext context, @NotNull Point position, int aggro) {
-        int[][] distanceToPlayerMap = context.getPlayer().getDistanceToPlayerMap();
+        int[][] distanceToPlayerMap = context.getDistanceMap();
 
         int dist = -1;
         Point nextPosition = position;

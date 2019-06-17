@@ -15,7 +15,6 @@ public class Exit extends Floor {
 
     @Override
     public @NotNull GameObjectType display() {
-        GameObjectType label = super.display();
         return GameObjectType.EXIT;
     }
 }

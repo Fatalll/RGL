@@ -6,13 +6,11 @@ import rgl.gameobjects.characters.player.Player;
 import rgl.gameobjects.items.Item;
 import rgl.logic.GameContext;
 import rgl.map.terrain.TerrainMap;
-import rgl.map.terrain.cells.Cell;
-import rgl.map.terrain.cells.Exit;
-import rgl.map.terrain.cells.Floor;
-import rgl.map.terrain.cells.Wall;
+import rgl.map.terrain.cells.*;
 
 import java.awt.*;
 import java.util.Arrays;
+import java.util.Random;
 import java.util.stream.Stream;
 
 public class WorldMapLayout {
@@ -39,10 +37,22 @@ public class WorldMapLayout {
         entry = terrain.getEnterPoint();
         exit = terrain.getExitPoint();
         world[exit.y][exit.x] = new Exit(exit);
+        world[entry.y][entry.x] = new Entry(entry);
     }
 
     public void initializePlayer(@NotNull Player player) {
         player.moveToCell(world[entry.y][entry.x]);
+    }
+
+    public void initializePlayerRandomly(@NotNull Player player) {
+        Random random = new Random();
+        int x, y;
+        do {
+            x = random.nextInt(dimensions.x - 2) + 1;
+            y = random.nextInt(dimensions.y - 2) + 1;
+        } while (!isPassable(x, y));
+
+        player.moveToCell(world[y][x]);
     }
 
     @NotNull

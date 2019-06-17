@@ -2,7 +2,6 @@ package rgl.gameobjects.characters.player;
 
 import org.jetbrains.annotations.NotNull;
 import rgl.gameobjects.GameObjectType;
-import rgl.gameobjects.GameObjectsProto;
 import rgl.gameobjects.characters.Dummy;
 import rgl.gameobjects.characters.stats.CharacterStat;
 import rgl.gameobjects.characters.stats.Stat;
@@ -14,6 +13,7 @@ import rgl.gui.GUI;
 import rgl.gui.PlayerControl;
 import rgl.logic.GameContext;
 import rgl.map.WorldMap;
+import rgl.proto.GameObjectsProto;
 import rgl.util.Pair;
 import rgl.util.Property;
 import rgl.util.Serializable;
@@ -30,6 +30,8 @@ import java.util.stream.Collectors;
 public class Player extends Dummy implements GUI.ActionListener {
     private final int maxInventorySize = 5;
     private int exp = 0;
+    private String id = "";
+    private int confusionTimeout = 0;
     private int distanceToPlayerMap[][];
     private List<Item> inventory = new ArrayList<>();
 
@@ -38,6 +40,13 @@ public class Player extends Dummy implements GUI.ActionListener {
         getStats().replace(StatType.HEALTH, new CharacterStat(100));
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     /**
      * add exp for something
@@ -46,6 +55,14 @@ public class Player extends Dummy implements GUI.ActionListener {
      */
     public void addExp(int exp) {
         this.exp += exp;
+    }
+
+    public void confuse(int timeout) {
+        confusionTimeout = timeout;
+    }
+
+    public boolean isConfused() {
+        return confusionTimeout > 0;
     }
 
     // TODO: cache
@@ -84,6 +101,8 @@ public class Player extends Dummy implements GUI.ActionListener {
     // reacting on Player pressing keyboard
     @Override
     public void onAction(PlayerControl.@NotNull Control action) {
+        if (confusionTimeout > 0) confusionTimeout--;
+
         calculatePlayerDistanceMap();
 
         attend();
@@ -190,6 +209,7 @@ public class Player extends Dummy implements GUI.ActionListener {
         public GameObjectsProto.Player serializeToProto() {
             return GameObjectsProto.Player.newBuilder()
                     .setExp(exp)
+                    .setId(id)
                     .addAllInventory(inventory.stream().map(item -> item.getAsSerializableItem().serializeToProto()).collect(Collectors.toList()))
                     .setDummy(getAsSerializableDummy().serializeToProto())
                     .build();
@@ -199,6 +219,7 @@ public class Player extends Dummy implements GUI.ActionListener {
         public void deserializeFromProto(GameObjectsProto.Player object) {
             getAsSerializableDummy().deserializeFromProto(object.getDummy());
             exp = object.getExp();
+            id = object.getId();
             inventory = object.getInventoryList().stream().map(item -> {
                 LinkedHashMap<StatType, Integer> property = item.getStatsList().stream()
                         .map(statEntry -> new AbstractMap.SimpleEntry<>(StatType.valueOf(statEntry.getStatType()), statEntry.getStatValue()))

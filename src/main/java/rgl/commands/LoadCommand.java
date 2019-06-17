@@ -1,7 +1,7 @@
 package rgl.commands;
 
-import rgl.gameobjects.GameObjectsProto;
 import rgl.logic.GameContext;
+import rgl.proto.GameObjectsProto;
 
 import java.io.FileInputStream;
 

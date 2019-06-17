@@ -16,6 +16,7 @@ import rgl.util.Property;
 import java.awt.*;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -35,6 +36,7 @@ public class ConsoleGUI extends GUI {
     private static final TextColor foreColor = TextColor.ANSI.WHITE;
 
     private GameContext context;
+    private UUID playerID;
 
     private Terminal terminal;
     private TextGraphics textGraphics;
@@ -43,8 +45,9 @@ public class ConsoleGUI extends GUI {
     private String previousKey = "";
     private Command save, exit;
 
-    public ConsoleGUI(@NotNull GameContext context, @NotNull Command save, @NotNull Command exit) throws IOException {
+    public ConsoleGUI(@NotNull GameContext context, @NotNull UUID playerID, @NotNull Command save, @NotNull Command exit) throws IOException {
         this.context = context;
+        this.playerID = playerID;
         this.save = save;
         this.exit = exit;
 
@@ -65,9 +68,17 @@ public class ConsoleGUI extends GUI {
 
     @Override
     public boolean iteration() throws IOException {
+        update();
+
+        KeyStroke key = terminal.readInput();
+        return handleKeyStroke(key);
+    }
+
+    @Override
+    public void update() throws IOException {
         terminal.clearScreen();
 
-		// Redraw the status bar.
+        // Redraw the status bar.
         updateStatus(ydelta, 0, 50);
         // Redraw the inventory bar.
         updateInventory(ydelta + 50, 0, 50);
@@ -78,9 +89,6 @@ public class ConsoleGUI extends GUI {
         terminal.flush();
         // Reset all possible color changes in the terminal's global state.
         resetColor();
-
-        KeyStroke key = terminal.readInput();
-        return handleKeyStroke(key);
     }
 
     @Override
@@ -93,10 +101,8 @@ public class ConsoleGUI extends GUI {
                 new TerminalPosition(x, y), new TerminalSize(len, xdelta), '.');
 
         x += 1;
-        for (Item i : context.getPlayer().getInventory()) {
-
+        for (Item i : context.getPlayers().get(playerID).getInventory()) {
             y += 1;
-
             textGraphics.putString(x, y, "> " + i.desciption());
         }
     }
@@ -122,7 +128,7 @@ public class ConsoleGUI extends GUI {
 
     private void updatePlayerStatus(int x, int y) {
         textGraphics.setForegroundColor(TextColor.ANSI.CYAN);
-        List<Property> ps = context.getPlayer().getStatus();
+        List<Property> ps = context.getPlayers().get(playerID).getStatus();
         String status = ps.stream().map(Property::show).collect(Collectors.joining(" "));
         textGraphics.putString(x, y, status);
     }

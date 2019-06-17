@@ -1,5 +1,8 @@
 package rgl.gui;
 
+import org.jetbrains.annotations.Nullable;
+import rgl.proto.PlayerAction;
+
 import java.awt.*;
 
 /**
@@ -26,6 +29,27 @@ public class PlayerControl {
             default:
                 return position;
         }
+    }
+
+    public static Control castFromPlayerAction(@Nullable PlayerAction action) {
+        if (action != null) {
+            switch (action) {
+                case UP:
+                    return Control.UP;
+                case DOWN:
+                    return Control.DOWN;
+                case LEFT:
+                    return Control.LEFT;
+                case RIGHT:
+                    return Control.RIGHT;
+                case SKIP:
+                    return Control.SKIP;
+                case DROP:
+                    return Control.DROP;
+            }
+        }
+
+        return Control.SKIP;
     }
 
     /**

@@ -48,3 +48,13 @@ dependencies {
 test {
     useJUnit()
 }
+
+task runServer(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'rgl.server.RGLServer'
+}
+
+task runClient(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'rgl.server.RGLClient'
+}

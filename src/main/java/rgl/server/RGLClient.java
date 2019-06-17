@@ -133,6 +133,11 @@ public class RGLClient {
     }
 
     private void run() throws IOException {
+        observer.onNext(PlayerMove.newBuilder()
+                .setPlayerId(playerID)
+                .setServer(Server.newBuilder().setName(server).build())
+                .setAction(PlayerAction.SKIP).build());
+
         while (!exit) {
             if (gui.iteration()) {
                 // do something

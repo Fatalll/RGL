@@ -1,8 +1,6 @@
 syntax = "proto2";
 
-package protobuf;
-
-option java_package = "protobuf";
+option java_package = "rgl.gameobjects";
 option java_outer_classname = "GameObjectsProto";
 
 message Position { // done done

@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'application'
+    id "com.google.protobuf" version "0.8.8"
 }
 
 apply plugin: 'application'
@@ -13,6 +14,23 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+}
+
+sourceSets {
+    main {
+        proto {
+            srcDir 'src/main/proto'
+        }
+    }
+}
+
+protobuf {
+    // Configure the protoc executable
+    protoc {
+        // Download from repositories
+        artifact = 'com.google.protobuf:protoc:3.0.0'
+    }
+    generateProtoTasks.generatedFilesBaseDir = 'src'
 }
 
 dependencies {

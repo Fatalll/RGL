@@ -1,4 +1,1 @@
 rootProject.name = 'rgl'
-include 'src'
-findProject(':src')?.name = 'test'
-

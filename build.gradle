@@ -34,7 +34,5 @@ dependencies {
 }
 
 test {
-    testLogging {
-        showStandardStreams = true
-    }
+    useJUnit()
 }

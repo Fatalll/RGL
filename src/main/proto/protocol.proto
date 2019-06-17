@@ -1,63 +1,63 @@
-syntax = "proto2";
+syntax = "proto3";
 
 option java_package = "rgl.gameobjects";
 option java_outer_classname = "GameObjectsProto";
 
-message Position { // done done
-    required int32 x = 1;
-    required int32 y = 2;
+message Position {
+    int32 x = 1;
+    int32 y = 2;
 }
 
-message WallCell { //done done
-    required Position position = 1;
-    required string objectType = 2;
+message WallCell {
+    Position position = 1;
+    string objectType = 2;
 }
 
-message FloorCell { // done done
-    required Position position = 1;
-    required string objectType = 2;
+message FloorCell {
+    Position position = 1;
+    string objectType = 2;
 }
 
-message GameContext { //done
-    required int32 width = 1;
-    required int32 height = 2;
-    required Position entry = 3;
-    required Position exit = 4;
+message GameContext {
+    int32 width = 1;
+    int32 height = 2;
+    Position entry = 3;
+    Position exit = 4;
     repeated WallCell walls = 5;
     repeated FloorCell floors = 6;
 
-    required Player player = 7;
+    Player player = 7;
     repeated Item items = 8;
     repeated Hostile mobs = 9;
 }
 
-message StatEntry { //done
-    required string statType = 1;
-    required int32 statValue = 2;
+message StatEntry {
+    string statType = 1;
+    int32 statValue = 2;
 }
 
-message Dummy { //done done
+message Dummy {
     repeated StatEntry stats = 1;
-    required int32 level = 2;
-    required Position position = 3;
+    int32 level = 2;
+    Position position = 3;
 }
 
-message Hostile { //done done
-    required Dummy dummy = 1;
-    required int32 radius = 2;
-    required string hostileType = 3;
+message Hostile {
+    Dummy dummy = 1;
+    int32 radius = 2;
+    string hostileType = 3;
 }
 
-message Item { //done done
+message Item {
     repeated StatEntry stats = 1;
-    required string name = 2;
-    required Position position = 3;
-    required string itemType = 4;
+    string name = 2;
+    Position position = 3;
+    string itemType = 4;
 }
 
-message Player { //done done
-    required Dummy dummy = 1;
-    required int32 exp = 2;
+message Player {
+    Dummy dummy = 1;
+    int32 exp = 2;
     repeated Item inventory = 3;
 }
 

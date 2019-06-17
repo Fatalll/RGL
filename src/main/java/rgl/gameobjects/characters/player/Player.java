@@ -121,6 +121,8 @@ public class Player extends Dummy implements GUI.ActionListener {
             Arrays.fill(row, Integer.MAX_VALUE);
         }
 
+        distanceToPlayerMap[getPosition().y][getPosition().x] = 0;
+
         // bfs queue
         Queue<Pair<Point, Integer>> q = new LinkedList<>();
         q.add(new Pair<>(getPosition(), 0));

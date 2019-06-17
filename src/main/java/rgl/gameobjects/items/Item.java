@@ -13,6 +13,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Representation of wearable items in the game.
+ */
 public abstract class Item extends GameObject<GameObjectType> {
     private String name;
     private Map<StatType, Integer> property;

@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.util.Random;
 
 
+/**
+ * Simple implementation of TerrainMap interface.
+ */
 public class TerrainMapImpl implements TerrainMap {
     public TerrainCellType[][] terrain;
     private Point enterPoint;
@@ -64,7 +67,7 @@ public class TerrainMapImpl implements TerrainMap {
     }
 
     /**
-     * Read the rgl.map from the given file stream.
+     * Read the rgl.map from the given file stream `in`.
      * Remember the necessary rgl.map format.
      */
     private void deserialize(BufferedReader in) throws IOException {

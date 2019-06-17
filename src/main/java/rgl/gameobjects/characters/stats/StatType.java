@@ -1,5 +1,8 @@
 package rgl.gameobjects.characters.stats;
 
+/**
+ * Player's stat types.
+ */
 public enum StatType {
     HEALTH("HP"),
     ARMOR("AR"),

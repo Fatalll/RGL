@@ -1,5 +1,8 @@
 package rgl.gameobjects.characters.stats;
 
+/**
+ * Character stats.
+ */
 public class CharacterStat implements Stat {
     private int val;
     private int max;

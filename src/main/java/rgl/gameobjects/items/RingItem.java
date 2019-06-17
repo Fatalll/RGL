@@ -7,6 +7,9 @@ import rgl.logic.GameContext;
 
 import java.util.Map;
 
+/**
+ * Special item type: Ring.
+ */
 public class RingItem extends Item {
 
     public RingItem(GameContext ctx, String name, Map<StatType, Integer> prop) {

@@ -13,6 +13,7 @@ public class Main {
      * Map must be 10x10, with borders '#', 's' as the start point,
      * 'e' as the end point, and '.' as a floor.
      * -g      -- generate a random rgl.map 10x10.
+     * -l      -- load saved game if present
      */
     public static void main(String[] args) {
         Options options = CMD.getOptions();

@@ -1,5 +1,8 @@
 package rgl.gameobjects.characters.stats;
 
+/**
+ * Amount of points that the item added to the player.
+ */
 public class StatDiff {
     private StatType type;
     private int diff;

@@ -7,6 +7,9 @@ import rgl.logic.GameContext;
 
 import java.util.Map;
 
+/**
+ * Special item type: Hood.
+ */
 public class HoodItem extends Item {
 
     public HoodItem(GameContext ctx, String name, Map<StatType, Integer> prop) {

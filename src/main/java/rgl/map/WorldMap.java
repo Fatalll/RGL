@@ -21,6 +21,10 @@ import java.awt.*;
 import java.util.Random;
 import java.util.stream.Stream;
 
+/**
+ * Representation of games' world map.
+ * Contains landscapes, items, npcs and the player.
+ */
 public class WorldMap {
     private WorldMapLayout layout;
     private GameContext context;
@@ -97,6 +101,9 @@ public class WorldMap {
         return layout.getCell(position);
     }
 
+	/**
+	 * Place item on the map by coordiatex `x` and `y`.
+	 */
     private void generateItem(int x, int y) {
         Random rand = new Random();
 
@@ -120,6 +127,9 @@ public class WorldMap {
         }
     }
 
+	/**
+	 * Place a hostile mov on the map by coordiatex `x` and `y`.
+	 */
     private void generateMob(int x, int y) {
         Cell<GameObjectType> cell = getCell(new Point(x, y));
 

@@ -1,0 +1,45 @@
+@startuml
+skinparam monochrome true
+
+[*] --> Start
+Start --> Input
+Input --> Exit : esc/q
+Input --> IsPassible: w/a/s/d
+Input --> TakeOffItem: e
+
+IsPassible --> CheckEnemy: true
+CheckEnemy --> CheckItem: false
+CheckEnemy --> ContactWithEnemy: true
+ContactWithEnemy -> Input
+CheckItem --> TakeItem : true
+CheckItem --> ChangeCell : false
+ChangeCell --> Input
+TakeItem --> Input
+
+state ContactWithEnemy {
+	AttackEnemy --> GainXP: killed
+	AttackEnemy --> BeAttacked: alive
+	GainXP --> ChangeCell
+	BeAttacked --> Killed: killed
+	BeAttacked --> Input: alive
+    Killed --> Exit
+
+	AttackEnemy: Персонаж атакует \n врага
+	GainXP: Получает опыт \n за убийство
+	BeAttacked: Получает удар \n в ответ
+    Killed: Персонаж умер
+}
+
+Start: Начать игру
+Input: Ввод игрока
+Exit: Выход из игры
+IsPassible: Проверить, возможно ли \n находиться в клетке
+CheckEnemy: Проверить, находиться ли \n в клетке враг
+CheckItem: Проверить, находиться ли \n в клетке предмет
+ContactWithEnemy: Бой с врагом
+ChangeCell: Сменить клетку
+TakeItem: Поместить предмет в инвентарь
+TakeOffItem: Удалить первый в инвентаре\nпредмет из инвентаря
+OpenInventory: Открыть инвентарь
+
+@enduml

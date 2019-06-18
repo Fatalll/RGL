@@ -113,7 +113,7 @@ public class ConsoleGUI extends GUI {
         y += 1;
         textGraphics.setForegroundColor(TextColor.ANSI.RED);
         textGraphics.putString(x, y, "Control: w/a/s/d. Quit: q / <esc>. Drop: e.");
-        textGraphics.putString(x, y + 1, "Save: b");
+        textGraphics.putString(x, y + 1, "Save (only for SinglePlayer): b");
         updatePlayerStatus(x, y + 2);
         textGraphics.putString(x, y + 3, "Press " + previousKey);
     }

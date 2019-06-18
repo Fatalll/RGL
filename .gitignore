@@ -5,6 +5,7 @@
 gradle/
 build/
 src/main/java/rgl/proto/
+src/main/grpc/
 gamestate
 # User-specific stuff
 .idea/**/workspace.xml

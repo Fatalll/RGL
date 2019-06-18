@@ -136,7 +136,9 @@ public class RGLServer {
 
                 @Override
                 public void onError(Throwable t) {
-                    loop.removePlayer(playerID);
+                    if (loop != null) {
+                        loop.removePlayer(playerID);
+                    }
                 }
 
                 @Override

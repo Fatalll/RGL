@@ -11,11 +11,10 @@ import rgl.map.terrain.TerrainMapImpl;
 import rgl.proto.*;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.IdentityHashMap;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class RGLClient {
 
@@ -130,6 +129,32 @@ public class RGLClient {
         channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
     }
 
+    public List<String> requestServerList() throws InterruptedException {
+        final CountDownLatch finishLatch = new CountDownLatch(1);
+        List<String> list = new ArrayList<>();
+        stub.getServerList(Empty.newBuilder().build(), new StreamObserver<ServerList>() {
+            @Override
+            public void onNext(ServerList value) {
+                list.addAll(value.getServersList().stream().map(Server::getName).collect(Collectors.toList()));
+            }
+
+            @Override
+            public void onError(Throwable t) {
+            }
+
+            @Override
+            public void onCompleted() {
+                finishLatch.countDown();
+            }
+        });
+
+        if (!finishLatch.await(5, TimeUnit.SECONDS)) {
+            System.err.println("error: unable to connect to the server!");
+        }
+
+        return list;
+    }
+
     public void connect(boolean newServer) throws InterruptedException, IOException {
         final CountDownLatch finishLatch = new CountDownLatch(1);
 
@@ -142,7 +167,7 @@ public class RGLClient {
 
             @Override
             public void onError(Throwable t) {
-                System.err.println(t.getMessage());
+                // something went wrong, print unable to connect
             }
 
             @Override

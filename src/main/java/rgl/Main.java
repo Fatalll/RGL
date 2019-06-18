@@ -21,7 +21,9 @@ public class Main {
             return;
         }
 
-        if (clientOptions(cmd)) {
+        if (serverListOptions(cmd)) {
+            requestServerList(cmd);
+        } else if (clientOptions(cmd)) {
             System.out.println("Multiplayer mode: run as a client.");
             runClient(cmd);
         } else if (serverOptions(cmd)) {
@@ -36,6 +38,11 @@ public class Main {
     private static boolean clientOptions(CommandLine cmd) {
         return cmd.hasOption(CMD.ipOption) && cmd.hasOption(CMD.portOption)
                 && cmd.hasOption(CMD.serverOption);
+    }
+
+    private static boolean serverListOptions(CommandLine cmd) {
+        return cmd.hasOption(CMD.ipOption) && cmd.hasOption(CMD.portOption)
+                && cmd.hasOption(CMD.requestServersOption);
     }
 
     private static boolean serverOptions(CommandLine cmd) {
@@ -56,8 +63,29 @@ public class Main {
         try {
             client = new RGLClient(name, ip, port);
             client.connect(newServer);
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             System.err.println("error: unable to run the application! Please, contact the developers.");
+        } finally {
+            if (client != null) {
+                try {
+                    client.shutdown();
+                } catch (InterruptedException e) {
+                    System.err.println("error: " + e.getMessage());
+                }
+            }
+        }
+    }
+
+    private static void requestServerList(CommandLine cmd) {
+        String portStr = (String) cmd.getOptionObject(CMD.portOption.charAt(0));
+        int port = Integer.valueOf(portStr);
+        String ip = (String) cmd.getOptionObject(CMD.ipOption.charAt(0));
+
+        RGLClient client = null;
+        try {
+            client = new RGLClient(" ", ip, port);
+            System.out.println("Available servers:");
+            client.requestServerList().forEach(System.out::println);
         } catch (InterruptedException e) {
             System.err.println("error: unable to run the application! Please, contact the developers.");
         } finally {
@@ -115,6 +143,7 @@ public class Main {
         final static String portOption = "p";
         final static String serverOption = "s";
         final static String createServerOption = "n";
+        final static String requestServersOption = "r";
         final static Options options = new Options();
 
         static {
@@ -123,6 +152,7 @@ public class Main {
             options.addOption(loadOption, "Load game if present.");
             options.addOption(serverOption, true, "Server name to connect to.");
             options.addOption(createServerOption, false, "Create new server.");
+            options.addOption(requestServersOption, false, "Request available servers list.");
             options.addOption(ipOption, true, "IPv4 address of the server to connect to.");
             options.addOption(portOption, true, "Port of the server to connect to.");
         }

@@ -7,6 +7,17 @@ import rgl.server.RGLServer;
 
 import java.io.IOException;
 
+/**
+ * Main class, start program with arguments:
+ * -f <arg>   Path to the user rgl.map.
+ * -g         Generate a random rgl.map.
+ * -i <arg>   IPv4 address of the server to connect to.
+ * -l         Load game if present.
+ * -n         Create new server.
+ * -p <arg>   Port of the server to connect to.
+ * -r         Request available servers list.
+ * -s <arg>   Server name to connect to.
+ */
 public class Main {
 
     public static void main(String[] args) {

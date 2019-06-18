@@ -16,6 +16,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+/**
+ * implementation of GRPC client
+ */
 public class RGLClient {
 
     private final ManagedChannel channel;
@@ -110,6 +113,7 @@ public class RGLClient {
     }
 
     private void run() throws IOException {
+        // initialize game stream
         observer.onNext(PlayerMove.newBuilder()
                 .setPlayerId(playerID)
                 .setServer(Server.newBuilder().setName(server).build())
@@ -121,14 +125,25 @@ public class RGLClient {
             }
         }
 
+        // leave session
         observer.onCompleted();
         gui.close();
     }
 
+    /**
+     * shutdown client
+     *
+     * @throws InterruptedException
+     */
     public void shutdown() throws InterruptedException {
         channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
     }
 
+    /**
+     * request list of available server sessions
+     * @return list of sessions names
+     * @throws InterruptedException
+     */
     public List<String> requestServerList() throws InterruptedException {
         final CountDownLatch finishLatch = new CountDownLatch(1);
         List<String> list = new ArrayList<>();
@@ -155,6 +170,12 @@ public class RGLClient {
         return list;
     }
 
+    /**
+     * connect to server and enter the game
+     * @param newServer true - create new server session
+     * @throws InterruptedException
+     * @throws IOException
+     */
     public void connect(boolean newServer) throws InterruptedException, IOException {
         final CountDownLatch finishLatch = new CountDownLatch(1);
 
@@ -182,9 +203,10 @@ public class RGLClient {
             stub.enterServer(Server.newBuilder().setName(server).build(), responseStreamObserver);
         }
 
+        // wait 10 seconds for response
         if (finishLatch.await(10, TimeUnit.SECONDS)) {
-            createGUI();
-            run();
+            createGUI(); // create interface
+            run(); // start game
         } else {
             System.err.println("error: unable to connect to the server!");
         }

@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 /**
- * game loop
+ * GameLoop for single player mod
  */
 public class GameLoop {
     private boolean exit = false;

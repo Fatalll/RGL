@@ -19,6 +19,9 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+/**
+ * GRPC server implementation
+ */
 public class RGLServer {
 
     private final int port;
@@ -36,17 +39,30 @@ public class RGLServer {
         server.blockUntilShutdown();
     }
 
+    /**
+     * start server
+     *
+     * @throws IOException
+     */
     public void start() throws IOException {
         server.start();
         Runtime.getRuntime().addShutdownHook(new Thread(RGLServer.this::stop));
     }
 
+    /**
+     * stop server
+     */
     public void stop() {
         if (server != null) {
             server.shutdown();
         }
     }
 
+    /**
+     * start and block server
+     * @throws InterruptedException
+     * @throws IOException
+     */
     public void run() throws InterruptedException, IOException {
         start();
         blockUntilShutdown();
@@ -58,6 +74,9 @@ public class RGLServer {
         }
     }
 
+    /**
+     * NetworkRGL service implementation
+     */
     private static class NetworkRGLService extends NetworkRGLGrpc.NetworkRGLImplBase {
 
         private static final int STEP_INTERVAL = 100;
@@ -65,6 +84,11 @@ public class RGLServer {
         private Map<String, ServerGameLoop> sessions = new HashMap<>();
         private Timer timer = new Timer();
 
+        /**
+         * request available sessions to connect
+         * @param request Empty
+         * @param responseObserver observer for result
+         */
         @Override
         public void getServerList(Empty request, StreamObserver<ServerList> responseObserver) {
             ServerList.Builder builder = ServerList.newBuilder();
@@ -77,6 +101,11 @@ public class RGLServer {
             responseObserver.onCompleted();
         }
 
+        /**
+         * create session with name specified in request
+         * @param request server name
+         * @param responseObserver observer for result
+         */
         @Override
         public void createServer(rgl.proto.Server request, StreamObserver<EnterServerResponse> responseObserver) {
             ServerGameLoop loop;
@@ -97,6 +126,11 @@ public class RGLServer {
 
         }
 
+        /**
+         * enter existing session with specified name
+         * @param request session name
+         * @param responseObserver observer for result
+         */
         @Override
         public void enterServer(rgl.proto.Server request, StreamObserver<EnterServerResponse> responseObserver) {
             ServerGameLoop loop = sessions.get(request.getName());
@@ -111,6 +145,11 @@ public class RGLServer {
             }
         }
 
+        /**
+         * create game stream of player moves and game contexts for iterations
+         * @param responseObserver observer for game contexts
+         * @return observer for player moves
+         */
         @Override
         public StreamObserver<PlayerMove> move(StreamObserver<GameObjectsProto.GameContext> responseObserver) {
             return new StreamObserver<PlayerMove>() {
@@ -148,6 +187,9 @@ public class RGLServer {
             };
         }
 
+        /**
+         * server game loop implementation
+         */
         private static class ServerGameLoop extends TimerTask {
             private GameContext context;
             private Map<UUID, Queue<PlayerAction>> playerActions = new ConcurrentHashMap<>();
@@ -158,8 +200,12 @@ public class RGLServer {
                 context = new GameContext(new TerrainMapImpl(100, 29), listeners);
             }
 
+            /**
+             * game loop iteration
+             */
             @Override
             public void run() {
+                // get players actions and execute them
                 playerActions.forEach((playerID, actionQueue) -> {
                     Player player = context.getPlayers().get(playerID);
                     GUI.ActionListener listener = player.isConfused() ? new Confusion(player) : player;
@@ -172,10 +218,12 @@ public class RGLServer {
                     }
                 });
 
+                // other game objects listeners
                 for (GameLoop.IterationListener listener : new HashSet<>(listeners)) {
                     listener.iterate(context);
                 }
 
+                // player enter exit from the current map, generate next one
                 if (context.getPlayers().values().stream().map(GameObject::getPosition)
                         .anyMatch(p -> p.equals(context.getWorld().getExit()))) {
                     listeners.clear();
@@ -184,6 +232,7 @@ public class RGLServer {
                     context.updateGameStatus("New region!");
                 }
 
+                // remove dead players
                 context.getPlayers().entrySet().stream().filter(entry -> entry.getValue().getHealth() <= 0)
                         .forEach(entry -> {
                             context.getPlayers().remove(entry.getKey());
@@ -191,10 +240,16 @@ public class RGLServer {
                             observers.remove(entry.getKey()).onCompleted();
                         });
 
+                // send game context to players
                 observers.values().forEach(gameContextStreamObserver ->
                         gameContextStreamObserver.onNext(context.getAsSerializableContext().serializeToProto()));
             }
 
+            /**
+             * add action to queue for specified player
+             * @param playerId player ID
+             * @param action player action
+             */
             public void addAction(UUID playerId, PlayerAction action) {
                 Queue<PlayerAction> queue = playerActions.get(playerId);
                 if (queue != null) {
@@ -202,6 +257,10 @@ public class RGLServer {
                 }
             }
 
+            /**
+             * register new player
+             * @return player ID for this session
+             */
             public UUID registerPlayer() {
                 Player player = new Player(context, 1);
                 UUID playerID = context.addPlayer(player);
@@ -211,14 +270,28 @@ public class RGLServer {
                 return playerID;
             }
 
+            /**
+             * get current game context
+             * @return
+             */
             public GameObjectsProto.GameContext getGameContext() {
                 return context.getAsSerializableContext().serializeToProto();
             }
 
+            /**
+             * add game context observer for new player
+             * @param uuid player ID
+             * @param responseObserver response observer
+             */
             public void addResponseObserver(UUID uuid, StreamObserver<GameObjectsProto.GameContext> responseObserver) {
                 observers.put(uuid, responseObserver);
             }
 
+
+            /**
+             * remove player from session
+             * @param playerID player ID
+             */
             public void removePlayer(UUID playerID) {
                 context.getPlayers().remove(playerID);
                 playerActions.remove(playerID);

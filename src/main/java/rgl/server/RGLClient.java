@@ -60,6 +60,7 @@ public class RGLClient {
 
                     @Override
                     public void onCompleted() {
+                        exit = true;
                         context.getGameStatus().appendStatus("You died!");
                     }
                 }

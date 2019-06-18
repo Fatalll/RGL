@@ -117,13 +117,7 @@ public class ConsoleGUI extends GUI {
         textGraphics.putString(x, y, "Control: w/a/s/d. Quit: q / <esc>. Drop: e.");
         textGraphics.putString(x, y + 1, "Save: b");
         updatePlayerStatus(x, y + 2);
-        updateGameStatus(x, y + 3);
-        textGraphics.putString(x, y + 4, "Press " + previousKey);
-    }
-
-    private void updateGameStatus(int x, int y) {
-        String s = context.getGameStatus().getStatus();
-        textGraphics.putString(x, y, "Last action: " + (s == null ? " " : s));
+        textGraphics.putString(x, y + 3, "Press " + previousKey);
     }
 
     private void updatePlayerStatus(int x, int y) {

@@ -56,11 +56,11 @@ public class PlayerControl {
      * possible player actions
      */
     public enum Control {
-        UP,
-        DOWN,
-        LEFT,
-        RIGHT,
-        SKIP, // Other button is pushed.
-        DROP
+        UP,    // player press up 'w'
+        DOWN,  // player press down 's'
+        LEFT,  // player press left 'a'
+        RIGHT, // player press right 'd'
+        SKIP,  // other button is pressed (skip)
+        DROP   // player press drop item 'e'
     }
 }

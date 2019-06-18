@@ -29,7 +29,7 @@ public class RGLServer {
         server = ServerBuilder.forPort(port).addService(new NetworkRGLService()).build();
     }
 
-	// Debug main.
+    // Debug main.
     public static void main(String[] args) throws Exception {
         RGLServer server = new RGLServer(8888);
         server.start();
@@ -48,8 +48,8 @@ public class RGLServer {
     }
 
     public void run() throws InterruptedException, IOException {
-		start();
-		blockUntilShutdown();
+        start();
+        blockUntilShutdown();
     }
 
     private void blockUntilShutdown() throws InterruptedException {
@@ -104,10 +104,11 @@ public class RGLServer {
             EnterServerResponse.Builder builder = EnterServerResponse.newBuilder();
             if (loop != null) {
                 builder.setPlayerId(loop.registerPlayer().toString()).setContext(loop.getGameContext());
+                responseObserver.onNext(builder.build());
+                responseObserver.onCompleted();
+            } else {
+                responseObserver.onError(new RuntimeException("Server not found!"));
             }
-
-            responseObserver.onNext(builder.build());
-            responseObserver.onCompleted();
         }
 
         @Override

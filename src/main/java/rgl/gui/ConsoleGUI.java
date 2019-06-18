@@ -68,8 +68,6 @@ public class ConsoleGUI extends GUI {
 
     @Override
     public boolean iteration() throws IOException {
-        update();
-
         KeyStroke key = terminal.readInput();
         return handleKeyStroke(key);
     }

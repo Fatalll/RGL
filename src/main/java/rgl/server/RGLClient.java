@@ -36,8 +36,6 @@ public class RGLClient {
         context = new GameContext(new TerrainMapImpl(100, 29),
                 Collections.newSetFromMap(new IdentityHashMap<>()));
 
-        //gui = new ConsoleGUI(context, playerID, new SaveCommand(context), () -> exit = true);
-
         observer = stub.move(
                 new StreamObserver<GameObjectsProto.GameContext>() {
                     @Override
@@ -56,6 +54,7 @@ public class RGLClient {
                     @Override
                     public void onError(Throwable t) {
                         System.out.println("Oops :(");
+                        t.printStackTrace();
                     }
 
                     @Override
@@ -64,6 +63,21 @@ public class RGLClient {
                     }
                 }
         );
+    }
+
+    // Debug main.
+    public static void main(String[] args) throws InterruptedException {
+        RGLClient client = null;
+        try {
+            client = new RGLClient("test", "localhost", 8888);
+            client.connect(true);
+        } catch (IOException e) {
+            System.err.println("error: unable to run the application! Please, contact the developers.");
+        } finally {
+            if (client != null) {
+                client.shutdown();
+            }
+        }
     }
 
     private void createGUI() throws IOException {
@@ -116,48 +130,38 @@ public class RGLClient {
         channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
     }
 
-    public void connect() throws InterruptedException, IOException {
+    public void connect(boolean newServer) throws InterruptedException, IOException {
         final CountDownLatch finishLatch = new CountDownLatch(1);
-        stub.createServer(Server.newBuilder().setName(server).build(),
-                new StreamObserver<EnterServerResponse>() {
-                    @Override
-                    public void onNext(EnterServerResponse value) {
-                        context.getAsSerializableContext().deserializeFromProto(value.getContext());
-                        playerID = value.getPlayerId();
-                    }
 
-                    @Override
-                    public void onError(Throwable t) {
-                        finishLatch.countDown();
-                    }
+        StreamObserver<EnterServerResponse> responseStreamObserver = new StreamObserver<EnterServerResponse>() {
+            @Override
+            public void onNext(EnterServerResponse value) {
+                context.getAsSerializableContext().deserializeFromProto(value.getContext());
+                playerID = value.getPlayerId();
+            }
 
-                    @Override
-                    public void onCompleted() {
-                        finishLatch.countDown();
-                    }
-                });
+            @Override
+            public void onError(Throwable t) {
+                System.err.println(t.getMessage());
+            }
+
+            @Override
+            public void onCompleted() {
+                finishLatch.countDown();
+            }
+        };
+
+        if (newServer) {
+            stub.createServer(Server.newBuilder().setName(server).build(), responseStreamObserver);
+        } else {
+            stub.enterServer(Server.newBuilder().setName(server).build(), responseStreamObserver);
+        }
 
         if (finishLatch.await(10, TimeUnit.SECONDS)) {
-                createGUI();
-                run();
-
+            createGUI();
+            run();
         } else {
             System.err.println("error: unable to connect to the server!");
-        }
-    }
-
-	// Debug main.
-    public static void main(String[] args) throws InterruptedException {
-        RGLClient client = null;
-        try {
-            client = new RGLClient("test", "5.19.190.45", 8888);
-    		client.connect();
-        } catch (IOException e) {
-            System.err.println("error: unable to run the application! Please, contact the developers.");
-        } finally {
-            if (client != null) {
-                client.shutdown();
-            }
         }
     }
 }

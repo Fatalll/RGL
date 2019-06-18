@@ -48,6 +48,7 @@ public class GameLoop {
 
     public void run() throws IOException {
         while (!exit) {
+            gui.update();
             if (gui.iteration()) {
                 for (IterationListener listener : new HashSet<>(listeners)) {
                     listener.iterate(context);

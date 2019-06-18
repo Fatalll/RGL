@@ -29,6 +29,7 @@ public class RGLServer {
         server = ServerBuilder.forPort(port).addService(new NetworkRGLService()).build();
     }
 
+	// Debug main.
     public static void main(String[] args) throws Exception {
         RGLServer server = new RGLServer(8888);
         server.start();
@@ -44,6 +45,11 @@ public class RGLServer {
         if (server != null) {
             server.shutdown();
         }
+    }
+
+    public void run() throws InterruptedException, IOException {
+		start();
+		blockUntilShutdown();
     }
 
     private void blockUntilShutdown() throws InterruptedException {
@@ -218,5 +224,4 @@ public class RGLServer {
         }
 
     }
-
 }

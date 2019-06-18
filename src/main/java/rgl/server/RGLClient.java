@@ -28,7 +28,8 @@ public class RGLClient {
     private String server;
     private boolean exit = false;
 
-    public RGLClient(String host, int port) {
+    public RGLClient(String serverName, String host, int port) {
+        this.server = serverName;
         channel = ManagedChannelBuilder.forAddress(host, port).usePlaintext().build();
         stub = NetworkRGLGrpc.newStub(channel);
 
@@ -63,43 +64,6 @@ public class RGLClient {
                     }
                 }
         );
-    }
-
-    public static void main(String[] args) throws InterruptedException {
-        RGLClient client = new RGLClient("5.19.190.45", 8888);
-        client.server = "test";
-        try {
-            final CountDownLatch finishLatch = new CountDownLatch(1);
-            client.stub.createServer(Server.newBuilder().setName(client.server).build(),
-                    new StreamObserver<EnterServerResponse>() {
-                        @Override
-                        public void onNext(EnterServerResponse value) {
-                            client.context.getAsSerializableContext().deserializeFromProto(value.getContext());
-                            client.playerID = value.getPlayerId();
-                        }
-
-                        @Override
-                        public void onError(Throwable t) {
-                            finishLatch.countDown();
-                        }
-
-                        @Override
-                        public void onCompleted() {
-                            finishLatch.countDown();
-                        }
-                    });
-
-            if (finishLatch.await(10, TimeUnit.SECONDS)) {
-                client.createGUI();
-                client.run();
-            } else {
-                System.out.println("Can't connect to the server!");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            client.shutdown();
-        }
     }
 
     private void createGUI() throws IOException {
@@ -150,5 +114,50 @@ public class RGLClient {
 
     public void shutdown() throws InterruptedException {
         channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
+    }
+
+    public void connect() throws InterruptedException, IOException {
+        final CountDownLatch finishLatch = new CountDownLatch(1);
+        stub.createServer(Server.newBuilder().setName(server).build(),
+                new StreamObserver<EnterServerResponse>() {
+                    @Override
+                    public void onNext(EnterServerResponse value) {
+                        context.getAsSerializableContext().deserializeFromProto(value.getContext());
+                        playerID = value.getPlayerId();
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        finishLatch.countDown();
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                        finishLatch.countDown();
+                    }
+                });
+
+        if (finishLatch.await(10, TimeUnit.SECONDS)) {
+                createGUI();
+                run();
+
+        } else {
+            System.err.println("error: unable to connect to the server!");
+        }
+    }
+
+	// Debug main.
+    public static void main(String[] args) throws InterruptedException {
+        RGLClient client = null;
+        try {
+            client = new RGLClient("test", "5.19.190.45", 8888);
+    		client.connect();
+        } catch (IOException e) {
+            System.err.println("error: unable to run the application! Please, contact the developers.");
+        } finally {
+            if (client != null) {
+                client.shutdown();
+            }
+        }
     }
 }

@@ -40,6 +40,5 @@ ContactWithEnemy: Бой с врагом
 ChangeCell: Сменить клетку
 TakeItem: Поместить предмет в инвентарь
 TakeOffItem: Удалить первый в инвентаре\nпредмет из инвентаря
-OpenInventory: Открыть инвентарь
 
 @enduml

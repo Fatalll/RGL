@@ -31,8 +31,18 @@ public class GameLoop {
 
         context = new GameContext(mapPath == null ? new TerrainMapImpl(100, 29)
                 : new TerrainMapImpl(mapPath, 100, 29), listeners);
-        player = new Player(context, 1);
-        UUID playerID = context.addPlayer(player);
+
+        UUID playerID;
+        if (load) {
+            new LoadCommand(context).execute();
+            // if load we sure there is a single player
+            playerID = context.getPlayers().keySet().iterator().next();
+            player = context.getPlayers().get(playerID);
+        } else {
+            player = new Player(context, 1);
+            playerID = context.addPlayer(player);
+        }
+
         gui = new ConsoleGUI(context, playerID, new SaveCommand(context), () -> exit = true);
         gui.addActionListener(player);
         gui.addActionListener(action -> {
@@ -40,10 +50,6 @@ public class GameLoop {
                 player.dropItem(0);
             }
         });
-
-        if (load) {
-            new LoadCommand(context).execute();
-        }
     }
 
     public void run() throws IOException {

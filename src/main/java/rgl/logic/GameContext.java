@@ -71,6 +71,7 @@ public class GameContext {
         UUID uuid;
         if (player.getId().isEmpty()) {
             uuid = UUID.randomUUID();
+            player.setId(uuid.toString());
         } else {
             uuid = UUID.fromString(player.getId());
         }

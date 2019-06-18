@@ -3,7 +3,6 @@ package rgl.server;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
-import rgl.commands.SaveCommand;
 import rgl.gui.ConsoleGUI;
 import rgl.gui.GUI;
 import rgl.logic.GameContext;
@@ -83,7 +82,7 @@ public class RGLClient {
     }
 
     private void createGUI() throws IOException {
-        gui = new ConsoleGUI(context, UUID.fromString(playerID), new SaveCommand(context), () -> exit = true);
+        gui = new ConsoleGUI(context, UUID.fromString(playerID), System.out::println, () -> exit = true);
         gui.addActionListener(action -> {
             PlayerMove.Builder builder = PlayerMove.newBuilder()
                     .setPlayerId(playerID)

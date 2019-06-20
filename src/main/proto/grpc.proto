@@ -3,7 +3,7 @@ syntax = "proto3";
 import "gameobjects.proto";
 
 option java_multiple_files = true;
-option java_package = "rgl.proto";
+option java_package = "ru.ifmo.rgl.proto";
 option java_outer_classname = "NetworkRGLProto";
 
 package proto;

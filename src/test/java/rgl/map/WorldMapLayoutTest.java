@@ -17,10 +17,16 @@ public class WorldMapLayoutTest {
             Collections.newSetFromMap(new IdentityHashMap<>()));
 
     @Test
-    public void test1() {
+    public void testDimensions() {
         TerrainMap tm = new TerrainMapImpl(10, 10);
         WorldMapLayout wml = new WorldMapLayout(tm, context);
         assertEquals(wml.getDimensions(), new Point(10, 10));
+    }
+
+    @Test
+    public void testExitPassable() {
+        TerrainMap tm = new TerrainMapImpl(10, 10);
+        WorldMapLayout wml = new WorldMapLayout(tm, context);
         assertTrue(wml.isPassable(tm.getExitPoint()));
     }
 }

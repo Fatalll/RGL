@@ -37,7 +37,7 @@ public class Main {
         } else if (clientOptions(cmd)) {
             System.out.println("Multiplayer mode: run as a client.");
             runClient(cmd);
-        } else if (serverOptions(cmd)) {
+        } else if (sessionOptions(cmd)) {
             System.out.println("Multiplayer mode: run as a server.");
             runServer(cmd);
         } else {
@@ -48,7 +48,7 @@ public class Main {
 
     private static boolean clientOptions(CommandLine cmd) {
         return cmd.hasOption(CMD.ipOption) && cmd.hasOption(CMD.portOption)
-                && cmd.hasOption(CMD.serverOption);
+                && cmd.hasOption(CMD.sessionOption);
     }
 
     private static boolean serverListOptions(CommandLine cmd) {
@@ -56,14 +56,14 @@ public class Main {
                 && cmd.hasOption(CMD.requestServersOption);
     }
 
-    private static boolean serverOptions(CommandLine cmd) {
+    private static boolean sessionOptions(CommandLine cmd) {
         return cmd.hasOption(CMD.portOption);
     }
 
     private static void runClient(CommandLine cmd) {
         String portStr = (String) cmd.getOptionObject(CMD.portOption.charAt(0));
         String ip = (String) cmd.getOptionObject(CMD.ipOption.charAt(0));
-        String name = (String) cmd.getOptionObject(CMD.serverOption.charAt(0));
+        String name = (String) cmd.getOptionObject(CMD.sessionOption.charAt(0));
         boolean newServer = cmd.hasOption(CMD.createServerOption);
         int port = Integer.valueOf(portStr);
         runClient_(name, ip, port, newServer);
@@ -152,7 +152,7 @@ public class Main {
         final static String loadOption = "l";
         final static String ipOption = "i";
         final static String portOption = "p";
-        final static String serverOption = "s";
+        final static String sessionOption = "s";
         final static String createServerOption = "n";
         final static String requestServersOption = "r";
         final static Options options = new Options();
@@ -161,7 +161,7 @@ public class Main {
             options.addOption(pathOption, true, "Path to the user rgl.map.");
             options.addOption(generatOption, "Generate a random rgl.map.");
             options.addOption(loadOption, "Load game if present.");
-            options.addOption(serverOption, true, "Server name to connect to.");
+            options.addOption(sessionOption, true, "Session name to connect to.");
             options.addOption(createServerOption, false, "Create new server.");
             options.addOption(requestServersOption, false, "Request available servers list.");
             options.addOption(ipOption, true, "IPv4 address of the server to connect to.");

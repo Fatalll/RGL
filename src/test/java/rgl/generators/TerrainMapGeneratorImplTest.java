@@ -13,7 +13,7 @@ import static org.junit.Assert.assertTrue;
 public class TerrainMapGeneratorImplTest {
 
     @Test
-    public void test1() throws Exception {
+    public void testGeneratedTerrain() throws Exception {
         int x = 20;
         int y = 10;
         Random rand = new Random();
@@ -27,8 +27,8 @@ public class TerrainMapGeneratorImplTest {
                 end = new Point(rand.nextInt(x - 2) + 1, rand.nextInt(y - 2) + 1);
             } while (start == end);
             TerrainMap.TerrainCellType[][] tr = new TerrainMapGenerator().generate(dims, start, end);
-            assertEquals(tr[start.y][start.x], TerrainMap.TerrainCellType.VOID);
-            assertEquals(tr[end.y][end.x], TerrainMap.TerrainCellType.VOID);
+            assertEquals(TerrainMap.TerrainCellType.VOID, tr[start.y][start.x]);
+            assertEquals(TerrainMap.TerrainCellType.VOID, tr[end.y][end.x]);
 
             Class<TerrainMapGenerator> cl = TerrainMapGenerator.class;
             Method bfs = cl.getDeclaredMethod("bfs", Point.class, TerrainMap.TerrainCellType[][].class, Point.class);

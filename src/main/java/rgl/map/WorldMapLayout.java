@@ -65,6 +65,10 @@ public class WorldMapLayout {
         return exit;
     }
 
+    public void setExit(Point exit) {
+        this.exit = exit;
+    }
+
     @NotNull
     public GameObjectType cellDisplay(@NotNull Point position) {
         validatePoint(position);
@@ -89,8 +93,8 @@ public class WorldMapLayout {
     }
 
     public boolean isPickable(@NotNull Point position) {
-       Cell<?> obj = getCell(position);
-       return obj.getGameObject() instanceof Item;
+        Cell<?> obj = getCell(position);
+        return obj.getGameObject() instanceof Item;
     }
 
     @NotNull
@@ -123,15 +127,11 @@ public class WorldMapLayout {
         dimensions = new Point(world[0].length, world.length);
     }
 
-    public void setExit(Point exit) {
-        this.exit = exit;
+    public Point getEntry() {
+        return entry;
     }
 
     public void setEntry(Point entry) {
         this.entry = entry;
-    }
-
-    public Point getEntry() {
-        return entry;
     }
 }

@@ -18,9 +18,9 @@ public class TerrainMapGenerator {
         rand = new Random();
     }
 
-	/**
-	 * @param seed Seed for a generator of random numbers.
-	 */
+    /**
+     * @param seed Seed for a generator of random numbers.
+     */
     public TerrainMapGenerator(long seed) {
         rand = new Random(seed);
     }
@@ -55,13 +55,14 @@ public class TerrainMapGenerator {
         }
         return visited;
     }
-	/**
-	 * Generate a random landscape.
-	 *
-	 * Instantiates new terrain object,
-	 * 
-     * @param s Start point.
-     * @param e End point.
+
+    /**
+     * Generate a random landscape.
+     * <p>
+     * Instantiates new terrain object,
+     *
+     * @param s    Start point.
+     * @param e    End point.
      * @param dims Terrain map dimentions.
      */
     public TerrainMap.TerrainCellType[][] generate(Point dims, Point s, Point e) {

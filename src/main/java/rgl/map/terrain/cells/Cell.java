@@ -15,12 +15,14 @@ import java.awt.*;
 public interface Cell<T> extends Drawable<T> {
     /**
      * get position of the cell
+     *
      * @return position
      */
     Point getPosition();
 
     /**
      * get game object in this cell
+     *
      * @return game object or null
      */
     @Nullable

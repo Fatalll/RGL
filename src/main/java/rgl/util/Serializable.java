@@ -3,7 +3,6 @@ package rgl.util;
 import com.google.protobuf.GeneratedMessageV3;
 
 
-
 public interface Serializable<T extends GeneratedMessageV3> {
     /**
      * @return Convert object to protobuf message

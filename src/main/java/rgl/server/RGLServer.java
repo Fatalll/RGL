@@ -60,6 +60,7 @@ public class RGLServer {
 
     /**
      * start and block server
+     *
      * @throws InterruptedException
      * @throws IOException
      */
@@ -86,7 +87,8 @@ public class RGLServer {
 
         /**
          * request available sessions to connect
-         * @param request Empty
+         *
+         * @param request          Empty
          * @param responseObserver observer for result
          */
         @Override
@@ -103,7 +105,8 @@ public class RGLServer {
 
         /**
          * create session with name specified in request
-         * @param request server name
+         *
+         * @param request          server name
          * @param responseObserver observer for result
          */
         @Override
@@ -128,7 +131,8 @@ public class RGLServer {
 
         /**
          * enter existing session with specified name
-         * @param request session name
+         *
+         * @param request          session name
          * @param responseObserver observer for result
          */
         @Override
@@ -147,6 +151,7 @@ public class RGLServer {
 
         /**
          * create game stream of player moves and game contexts for iterations
+         *
          * @param responseObserver observer for game contexts
          * @return observer for player moves
          */
@@ -247,8 +252,9 @@ public class RGLServer {
 
             /**
              * add action to queue for specified player
+             *
              * @param playerId player ID
-             * @param action player action
+             * @param action   player action
              */
             public void addAction(UUID playerId, PlayerAction action) {
                 Queue<PlayerAction> queue = playerActions.get(playerId);
@@ -259,6 +265,7 @@ public class RGLServer {
 
             /**
              * register new player
+             *
              * @return player ID for this session
              */
             public UUID registerPlayer() {
@@ -272,6 +279,7 @@ public class RGLServer {
 
             /**
              * get current game context
+             *
              * @return
              */
             public GameObjectsProto.GameContext getGameContext() {
@@ -280,7 +288,8 @@ public class RGLServer {
 
             /**
              * add game context observer for new player
-             * @param uuid player ID
+             *
+             * @param uuid             player ID
              * @param responseObserver response observer
              */
             public void addResponseObserver(UUID uuid, StreamObserver<GameObjectsProto.GameContext> responseObserver) {
@@ -290,6 +299,7 @@ public class RGLServer {
 
             /**
              * remove player from session
+             *
              * @param playerID player ID
              */
             public void removePlayer(UUID playerID) {

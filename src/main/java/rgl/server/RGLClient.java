@@ -141,6 +141,7 @@ public class RGLClient {
 
     /**
      * request list of available server sessions
+     *
      * @return list of sessions names
      * @throws InterruptedException
      */
@@ -172,6 +173,7 @@ public class RGLClient {
 
     /**
      * connect to server and enter the game
+     *
      * @param newServer true - create new server session
      * @throws InterruptedException
      * @throws IOException

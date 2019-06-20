@@ -23,7 +23,6 @@ public class GameStatus {
      *
      * @param msg New status.
      */
-
     public void updateStatus(String msg) {
         this.msg = msg;
     }

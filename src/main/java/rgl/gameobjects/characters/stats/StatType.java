@@ -9,6 +9,7 @@ public enum StatType {
     ATTACK("AT");
 
     private final String descr;
+
     StatType(String at) {
         this.descr = at;
     }

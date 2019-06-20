@@ -5,11 +5,6 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 
 public interface TerrainMap {
-    enum TerrainCellType {
-        WALL,
-        VOID,
-    }
-
     @NotNull
     Point getDimensions();
 
@@ -21,4 +16,9 @@ public interface TerrainMap {
 
     @NotNull
     TerrainCellType getCellType(Point position);
+
+    enum TerrainCellType {
+        WALL,
+        VOID,
+    }
 }

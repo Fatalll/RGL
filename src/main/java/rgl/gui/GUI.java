@@ -33,6 +33,7 @@ public abstract class GUI {
 
     /**
      * close GUI
+     *
      * @throws IOException
      */
     public abstract void close() throws IOException;
@@ -45,6 +46,7 @@ public abstract class GUI {
 
     /**
      * add listener to GUI actions
+     *
      * @param listener listener
      */
     public void addActionListener(@NotNull ActionListener listener) {
@@ -53,6 +55,7 @@ public abstract class GUI {
 
     /**
      * remove listener to GUI action
+     *
      * @param listener listener
      * @return true if present
      */

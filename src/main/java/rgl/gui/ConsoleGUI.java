@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  */
 public class ConsoleGUI extends GUI {
 
-	// Border margins.
+    // Border margins.
     private static final int xborder = 15;
     private static final int yborder = 15;
     private static final int xdelta = 7;
@@ -185,15 +185,15 @@ public class ConsoleGUI extends GUI {
         return false;
     }
 
-	/**
-	 * Exact display configuration for console.
-	 *
-	 * Include displayed characters and them colors.
-	 */
+    /**
+     * Exact display configuration for console.
+     * <p>
+     * Include displayed characters and them colors.
+     */
     static class ConsoleDisplayConfig {
-		static DisplayConfig<TextCharacter> config = new DisplayConfig<>();
+        static DisplayConfig<TextCharacter> config = new DisplayConfig<>();
 
-		static {
+        static {
             config.set(GameObjectType.EXIT,
                     new TextCharacter(DisplayCharacter.EXIT, TextColor.ANSI.YELLOW, backColor));
             config.set(GameObjectType.FLOOR1,
@@ -216,13 +216,13 @@ public class ConsoleGUI extends GUI {
                     new TextCharacter(DisplayCharacter.RINGITEM, TextColor.ANSI.YELLOW, backColor, SGR.BOLD, SGR.ITALIC, SGR.BLINK));
             config.set(GameObjectType.HOODITEM,
                     new TextCharacter(DisplayCharacter.HOODITEM, TextColor.ANSI.WHITE, backColor, SGR.BOLD, SGR.ITALIC, SGR.BLINK));
-		}
+        }
 
         static DisplayConfig<TextCharacter> getConfig() {
             return config;
         }
 
-		// List of diplay symbols for object types. 
+        // List of diplay symbols for object types.
         static final class DisplayCharacter {
             static final Character EXIT = '>';
             static final Character FLOOR1 = ' ';

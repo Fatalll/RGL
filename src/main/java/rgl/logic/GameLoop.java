@@ -84,7 +84,8 @@ public class GameLoop {
         // Remove save if exist
         try {
             Files.deleteIfExists(Paths.get("gamestate"));
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {
+        }
     }
 
     public interface IterationListener {

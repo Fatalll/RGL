@@ -19,7 +19,7 @@ public class GameStatus {
     }
 
     /**
-     * Fully update the current game status (and erase the old one.
+     * Fully update the current game status (and erase the old one).
      *
      * @param msg New status.
      */

@@ -11,7 +11,7 @@ import java.awt.*;
 
 public class WorldMapLayoutTest {
     @Test
-    public void test1() {
+    public void testCorrectWorldLayout() {
         Player p = new Player();
         TerrainMap tm = new TerrainMapImpl(10, 10);
         WorldMapLayout wml = new WorldMapLayout(tm, p);

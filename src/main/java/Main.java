@@ -18,10 +18,10 @@ import java.awt.*;
 import java.io.IOException;
 
 public class Main {
-    static class MainLoop {
+    private static class MainLoop {
         // Magic constants.
-		private final int mapWidth = 10;
-		private final int mapHeight = 10;
+        private final int mapWidth = 10;
+        private final int mapHeight = 10;
 
         private final TerrainMap terrain;
         private final Player player;
@@ -116,62 +116,62 @@ public class Main {
     }
 
 
-	static class CMD {
-    	final static String pathOption = "f";
-    	final static String generatOption = "g";
+    static class CMD {
+        final static String pathOption = "f";
+        final static String generatOption = "g";
 
-		static Options getOptions() {
-    		Options options = new Options();
+        static Options getOptions() {
+            Options options = new Options();
             options.addOption(pathOption, true, "Path to the user map.");
             options.addOption(generatOption, "Generate a random map.");
-        	return options;
-		}
+            return options;
+        }
 
-    	static void usage(Options options) {
-    		HelpFormatter fmt = new HelpFormatter();
-    		fmt.printHelp("RGL", options);
-    	}
-	}
+        static void usage(Options options) {
+            HelpFormatter fmt = new HelpFormatter();
+            fmt.printHelp("RGL", options);
+        }
+    }
 
-	/**
-	 * Command line options:
-	 *   -f path -- load map from the user file.
-	 *              Map must be 10x10, with borders '#', 's' as the start point,
-	 *              'e' as the end point, and '.' as a floor.
-	 *   -g      -- generate a random map 10x10.
-	 *
-	 */
+    /**
+     * Command line options:
+     *   -f path -- load map from the user file.
+     *              Map must be 10x10, with borders '#', 's' as the start point,
+     *              'e' as the end point, and '.' as a floor.
+     *   -g      -- generate a random map 10x10.
+     *
+     */
     public static void main(String[] args) throws IOException {
         Options options = CMD.getOptions();
 
-		CommandLine cmd = null;
-		try {
-    		cmd = new DefaultParser().parse(options, args);
-		} catch (ParseException e) {
-			System.err.println("error: unable to parse command line parameters.");
-			CMD.usage(options);
-			return;
-		}
+        CommandLine cmd = null;
+        try {
+            cmd = new DefaultParser().parse(options, args);
+        } catch (ParseException e) {
+            System.err.println("error: unable to parse command line parameters.");
+            CMD.usage(options);
+            return;
+        }
 
         MainLoop ml = null;
-		if (cmd.hasOption(CMD.generatOption)) {
-    		try {
-    			ml = new MainLoop();
-    		} catch (IOException e) {
-				System.err.println("error: " + e.getMessage());
-    		}
-		} else if (cmd.hasOption(CMD.pathOption)) {
+        if (cmd.hasOption(CMD.generatOption)) {
+            try {
+                ml = new MainLoop();
+            } catch (IOException e) {
+                System.err.println("error: " + e.getMessage());
+            }
+        } else if (cmd.hasOption(CMD.pathOption)) {
             String str = (String)cmd.getOptionObject(CMD.pathOption.charAt(0));
-    		try {
-    			ml = new MainLoop(str);
-    		} catch (IOException e) {
-				System.err.println("error: " + e.getMessage());
-    		}
-		} else {
-			System.err.println("error: no required options.");
-			CMD.usage(options);
-			return;
-		}
+            try {
+                ml = new MainLoop(str);
+            } catch (IOException e) {
+                System.err.println("error: " + e.getMessage());
+            }
+        } else {
+            System.err.println("error: no required options.");
+            CMD.usage(options);
+            return;
+        }
         ml.run();
     }
 }

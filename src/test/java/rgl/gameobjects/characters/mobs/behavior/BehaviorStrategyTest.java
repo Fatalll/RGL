@@ -35,10 +35,10 @@ public class BehaviorStrategyTest {
         player.calculatePlayerDistanceMap();
 
         Point farPosition = new Point(position.x - 5, position.y);
-        assertEquals(strategy.step(context, farPosition, 3), farPosition);
+        assertEquals(farPosition, strategy.step(context, farPosition, 3));
 
         Point nearPosition = new Point(position.x - 2, position.y);
-        assertEquals(strategy.step(context, nearPosition, 5), new Point(position.x - 1, position.y));
+        assertEquals(new Point(position.x - 1, position.y), strategy.step(context, nearPosition, 5));
     }
 
     @Test
@@ -50,11 +50,11 @@ public class BehaviorStrategyTest {
         Point position = player.getPosition();
 
         Point farPosition = new Point(position.x - 5, position.y);
-        assertEquals(strategy.step(context, farPosition, 3), farPosition);
+        assertEquals(farPosition, strategy.step(context, farPosition, 3));
 
         Point nearPosition = new Point(position.x + 2, position.y);
-        assertNotEquals(strategy.step(context, nearPosition, 5), new Point(position.x + 2, position.y));
-        assertNotEquals(strategy.step(context, nearPosition, 5), new Point(position.x + 1, position.y));
+        assertNotEquals(new Point(position.x + 2, position.y), strategy.step(context, nearPosition, 5));
+        assertNotEquals(new Point(position.x + 1, position.y), strategy.step(context, nearPosition, 5));
     }
 
     @Test
@@ -62,6 +62,6 @@ public class BehaviorStrategyTest {
         BehaviorStrategy strategy = new PassiveBehaviorStrategy();
 
         Point position = new Point(5, 5);
-        assertEquals(strategy.step(context, position, 10), position);
+        assertEquals(position, strategy.step(context, position, 10));
     }
 }
